@@ -1,28 +1,25 @@
 {
-  "name": "material-datetime",
+  "name": "material-timepicker",
   "version": "0.0.1",
-  "description": "Date/Time picker in material design",
+  "description": "material design timepicker",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hownowbrowncow/material-datetime.git"
+    "url": "git+https://github.com/hownowbrowncow/material-timepicker.git"
   },
   "keywords": [
-    "datetime",
-    "date",
-    "time",
-    "material-design",
-    "material-datetime"
+    "timepicker",
+    "material-timepicker"
   ],
   "author": "Nick C",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hownowbrowncow/material-datetime/issues"
+    "url": "https://github.com/hownowbrowncow/material-timepicker/issues"
   },
-  "homepage": "https://github.com/hownowbrowncow/material-datetime#readme",
+  "homepage": "https://github.com/hownowbrowncow/material-timepicker#readme",
   "devDependencies": {
     "autoprefixer": "^6.0.3",
     "babel": "^5.8.23",
