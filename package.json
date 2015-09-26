@@ -22,5 +22,24 @@
   "bugs": {
     "url": "https://github.com/hownowbrowncow/material-datetime/issues"
   },
-  "homepage": "https://github.com/hownowbrowncow/material-datetime#readme"
+  "homepage": "https://github.com/hownowbrowncow/material-datetime#readme",
+  "devDependencies": {
+    "autoprefixer": "^6.0.3",
+    "babel": "^5.8.23",
+    "babelify": "^6.3.0",
+    "browserify": "^11.2.0",
+    "gulp": "^3.9.0",
+    "gulp-postcss": "^6.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.0.4",
+    "gulp-util": "^3.0.6",
+    "html-browserify": "0.0.6",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.4.0"
+  },
+  "dependencies": {
+    "bean": "^1.0.15",
+    "bonzo": "^2.0.0",
+    "qwery": "^4.0.0"
+  }
 }
