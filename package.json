@@ -1,0 +1,26 @@
+{
+  "name": "material-datetime",
+  "version": "0.0.1",
+  "description": "Date/Time picker in material design",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hownowbrowncow/material-datetime.git"
+  },
+  "keywords": [
+    "datetime",
+    "date",
+    "time",
+    "material-design",
+    "material-datetime"
+  ],
+  "author": "Nick C",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hownowbrowncow/material-datetime/issues"
+  },
+  "homepage": "https://github.com/hownowbrowncow/material-datetime#readme"
+}
