@@ -1,0 +1,10 @@
+[*]
+# Unix-style newlines
+end_of_line = lf
+# Insert newline at end of all files
+insert_final_newline = true
+
+[*.js]
+charset = utf-8
+indent-style = space
+indent-size = 4
