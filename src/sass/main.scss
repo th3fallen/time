@@ -1,0 +1,86 @@
+.clearfix {
+    clear: both;
+}
+.mtp-open {
+    overflow: hidden;
+    position: relative;
+}
+.mtp-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 333;
+    background-color: rgba(55,55,55,0.3);
+}
+.mtp-wrapper {
+    background-color: #fff;
+    width: 350px;
+    height: 450px;
+    margin: 100px auto 0 auto;
+}
+.mtp-display {
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    background-color: #8BC34A;
+    color: #f3f3f3;
+    text-align: center
+}
+.mtp-display__time {
+    font-size: 45px;
+}
+.mtp-display__meridiem {
+    font-size: 20px;
+    text-transform: uppercase;
+}
+
+@mixin clockNumbers($itemCount, $circleSize, $itemSize) {
+    width: $circleSize;
+    height: $circleSize;
+
+    > * {
+        width: $itemSize;
+        height: $itemSize;
+
+        $angle: (360 / $itemCount);
+        $rot: 0;
+
+        @for $i from 1 through $itemCount {
+            &:nth-of-type(#{$i}) {
+                transform: rotate($rot * 1deg)  translate($circleSize / 2) rotate($rot * -1deg);
+            }
+
+            $rot: $rot + $angle;
+        }
+    }
+}
+.mtp-picker {
+    width: 100%;
+    height: 300px;
+}
+.mtp-clock {
+    width: 260px;
+    height: 260px;
+    margin: 25px auto;
+    padding: 15px;
+    background-color: #EFEFEF;
+    border-radius: 50%;
+}
+.mtp-clock__hours, .mtp-clock__minutes {
+    @include clockNumbers(12, 245px, 16px);
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: block;
+        position: absolute;
+        text-align: center;
+        top: 50%; 
+        left: 50%;
+        margin: 0;
+    }
+}
