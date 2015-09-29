@@ -20,9 +20,5 @@ gulp.task('sass:build', function() {
 });
 
 gulp.task('sass:watch', function() {
-    var stream = gulp.watch('./src/sass/**/*.scss');
-
-    stream.on('change', function() {
-        gulp.start('sass:build');
-    });
+    gulp.watch('./src/sass/**/*.scss', ['sass:build']);
 });
