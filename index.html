@@ -25,8 +25,12 @@
                 <div class="mtp-display">
                     <span class="mtp-display__time">3:30</span>
                     <span class="mtp-display__meridiem">am</span>
-                </div>
+                </div><!-- END .mtp-display -->
                 <div class="mtp-picker">
+                    <div class="mtp-meridiem">
+                        <span class="mtp-meridiem__am mtp-meridiem--active">am</span>
+                        <span class="mtp-meridiem__pm">pm</span>
+                    </div><!-- END .mtp-meridiem -->
                     <div class="mtp-clock">
                         <div class="mtp-clock__center"></div>
                         <div class="mtp-clock__hand"></div>
@@ -59,9 +63,13 @@
                             <li>5</li>
                             <li>10</li>
                         </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </div><!-- END .mtp-clock -->
+                    <div class="mtp-actions">
+                        <button type="button" class="mtp-actions__button">Cancel</button>
+                        <button type="button" class="mtp-actions__button">OK</button>
+                    </div><!-- END .mtp-actions -->
+                </div><!-- END .mtp-picker -->
+            </div><!-- END .mtp-wrapper -->
+        </div><!-- END .mtp-overlay -->
     </body>
 </html>
