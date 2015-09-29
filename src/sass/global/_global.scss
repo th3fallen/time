@@ -1,0 +1,36 @@
+.clearfix {
+    clear: both;
+}
+.mtp-open {
+    overflow: hidden;
+    position: relative;
+}
+.mtp-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 333;
+    background-color: rgba(55,55,55,0.3);
+    overflow: scroll;
+}
+.mtp-wrapper {
+    background-color: #fff;
+    width: 350px;
+    height: auto;
+    margin: 10% auto;
+}
+
+// galaxy
+@media (max-width: 361px) and (min-width: 321px) {
+    .mtp-wrapper {
+        width: 325px;
+    }
+}
+// iPhone 5
+@media (max-width: 320px) {
+    .mtp-wrapper {
+        width: 300px;
+    }
+}

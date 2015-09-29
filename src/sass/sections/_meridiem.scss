@@ -1,0 +1,15 @@
+.mtp-meridiem {
+    text-align: center;
+    margin: 20px 0 0 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    
+    span {
+        padding: 10px;
+        margin: 0 20px;
+    }
+}
+.mtp-meridiem--active {
+    background-color: #8BC34A;
+    border-radius: 50%;
+}

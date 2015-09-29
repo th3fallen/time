@@ -1,0 +1,99 @@
+.mtp-clock {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #EFEFEF;
+    border-radius: 50%;
+}
+.mtp-clock__hours, .mtp-clock__minutes {
+    @include clockNumbers(12, 245px, 16px);
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: block;
+        position: absolute;
+        text-align: center;
+        top: 50%; 
+        left: 50%;
+        margin: 0;
+        z-index: 444;
+    }
+}
+.mtp-clock__hand {
+    position: absolute;
+    width: 2px;
+    padding: 0.5px;
+    height: 110px;
+    left: 50%;
+    top: 50%;
+    background-color: #8BC34A;
+    transform-origin: 1px 1px;
+    transform: rotate(270deg);
+}
+.mtp-clock__center {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #8BC34A;
+    top: 49%;
+    left: 49%;
+    border-radius: 4px;
+}
+.mtp-clock__end {
+    z-index: 333;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #8BC34A;
+    top: 44%;
+    left: 44%;
+    border-radius: 20px;
+    transform: rotate(0deg)  translate(245px / 2) rotate(0deg);
+}
+
+// galaxy
+@media (max-width: 361px) and (min-width: 321px) {
+    .mtp-clock {
+        width: 235px;
+        height: 235px;
+    }
+    .mtp-clock__hours, .mtp-clock__minutes {
+        @include clockNumbers(12, 220px, 16px);
+    }
+    .mtp-clock__hand {
+        height: 95px;
+    }
+    .mtp-clock__end {
+        transform: rotate(0deg)  translate(220px / 2) rotate(0deg);
+        top: 43%;
+        left: 43%;
+    }
+}
+
+// iPhone 5
+@media (max-width: 320px) {
+    .mtp-clock {
+        width: 210px;
+        height: 210px;
+    }
+    .mtp-clock__hours, .mtp-clock__minutes {
+        @include clockNumbers(12, 195px, 16px);
+    }
+    .mtp-clock__hand {
+        height: 85px;
+    }
+    .mtp-clock__end {
+        transform: rotate(0deg)  translate(195px / 2) rotate(0deg);
+        top: 43%;
+        left: 42.5%;
+    }
+    .mtp-clock__center {
+        top: 48.5%;
+        left: 48.80%;
+    }
+}
