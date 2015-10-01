@@ -20,6 +20,12 @@
     "url": "https://github.com/hownowbrowncow/material-timepicker/issues"
   },
   "homepage": "https://github.com/hownowbrowncow/material-timepicker#readme",
+  "browserify": {
+    "transform": [
+      "babelify",
+      "html-browserify"
+    ]
+  },
   "devDependencies": {
     "autoprefixer": "^6.0.3",
     "babel": "^5.8.23",
@@ -31,7 +37,6 @@
     "gulp-sass": "^2.0.4",
     "gulp-util": "^3.0.6",
     "html-browserify": "0.0.6",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.4.0"
+    "vinyl-source-stream": "^1.1.0"
   }
 }
