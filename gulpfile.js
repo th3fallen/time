@@ -23,7 +23,7 @@ gulp.task('js', function() {
         .bundle()
         .on('error', function(error) {
             gutil.log(error);
-            this.end();
+            this.emit('end');
         })
         .pipe(source('timepicker.js'))
         .pipe(gulp.dest('./dist/js'));
