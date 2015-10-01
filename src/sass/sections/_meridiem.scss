@@ -7,9 +7,16 @@
     span {
         padding: 10px;
         margin: 0 20px;
+        border-radius: 50%;
+
+        &:hover:not(.mtp-meridiem--active) {
+            background-color: $c-primary-light;
+            color: $c-primary-text;
+            cursor: pointer;
+        }
     }
 }
 .mtp-meridiem--active {
-    background-color: #8BC34A;
-    border-radius: 50%;
+    background-color: $c-primary;
+    color: $c-text;
 }

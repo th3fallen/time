@@ -1,10 +1,8 @@
 @mixin clockNumbers($itemCount, $circleSize, $itemSize) {
-    width: $circleSize;
-    height: $circleSize;
-
     > * {
         width: $itemSize;
         height: $itemSize;
+        line-height: $itemSize;
 
         $angle: (360 / $itemCount);
         $rot: 0;
