@@ -111,7 +111,7 @@ class TimePicker {
     }
 
     /**
-     * Hide the picker
+     * Hide the picker and reset state
      *
      * @return {void}
      */
@@ -131,7 +131,8 @@ class TimePicker {
      * @return {void}
      */
     hideEvent(event) {
-        // only allow event based close if event.path[0] element contains these classes
+        // only allow event based close if event.toElement contains one of these classes
+        // hack to prevent overlay close event from triggering on all elements
         const allowedClasses = ['mtp-overlay', 'mtp-actions__cancel'];
         const classList = event.toElement.classList;
 
@@ -175,6 +176,11 @@ class TimePicker {
         this.clockEls.hand.style['-ms-transform'] = styleVal;
     }
 
+    /**
+     * Go to next step in time picking process
+     *
+     * @return {void}
+     */
     nextStep() {
         const nextStepAction = [
             () => {
@@ -195,6 +201,12 @@ class TimePicker {
         nextStepAction();
     }
 
+    /**
+     * Toggle hour (both military and standard) clock visiblity in DOM
+     *
+     * @param {boolean} isVisible Is clock face toggled visible or hidden
+     * @return {void}
+     */
     toggleHourVisible(isVisible = false) {
         const isMilitaryFormat = Boolean(this.options.timeFormat === 'military');
         const hourEl = this.clockEls[isMilitaryFormat ? 'hoursMilitary' : 'hours'];
@@ -204,6 +216,12 @@ class TimePicker {
         this.currentStep = 0;
     }
 
+    /**
+     * Toggle minute clock visiblity in DOM
+     *
+     * @param {boolean} isVisible Is clock face toggled visible or hidden
+     * @return {void}
+     */
     toggleMinutesVisible(isVisible = false) {
         this.clockEls.minutes.style.display = isVisible ? 'block' : 'none';
         this.rotateHand(9);
@@ -214,6 +232,13 @@ class TimePicker {
 
     }
 
+    /**
+     * Set active clock face element
+     *
+     * @param {Element} containerEl New active elements .parentNode
+     * @param {Element} activeEl Element to set active
+     * @return {void}
+     */
     setActive(containerEl, activeEl) {
         const activeClassName = 'mtp-clock--active';
         const currentActive = containerEl.getElementsByClassName(activeClassName)[0];
@@ -222,6 +247,12 @@ class TimePicker {
         activeEl.classList.add(activeClassName);
     }
 
+    /**
+     * 12-hour clock select event handler
+     *
+     * @param {Event} event Event object passed from listener
+     * @return {void}
+     */
     hourSelect(event) {
         const newActive = event.toElement;
         const nodeIndex = [].indexOf.call(newActive.parentNode.children, newActive);
@@ -231,6 +262,12 @@ class TimePicker {
         this.setDisplayTime(newActive.innerHTML, 0);
     }
 
+    /**
+     * Minute clock select event handler
+     *
+     * @param {Event} event Event object passed from listener
+     * @return {void}
+     */
     minuteSelect(event) {
         const newActive = event.toElement;
         const nodeIndex = [].indexOf.call(newActive.parentNode.children, newActive);
