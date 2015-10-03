@@ -46,6 +46,7 @@ class TimePicker {
         };
         this.buttonEls = {
             cancel: this.pickerEl.getElementsByClassName('mtp-actions__cancel')[0],
+            back: this.pickerEl.getElementsByClassName('mtp-actions__back')[0],
             ok: this.pickerEl.getElementsByClassName('mtp-actions__ok')[0],
         };
         this.clockEls = {
@@ -77,7 +78,8 @@ class TimePicker {
         this.buttonEls.cancel.addEventListener('click', event => this.hideEvent(event));
 
         // next/prev step actions
-        this.buttonEls.ok.addEventListener('click', () => this.nextStep());
+        this.buttonEls.ok.addEventListener('click', () => this.changeStep(this.currentStep + 1));
+        this.buttonEls.back.addEventListener('click', () => this.changeStep(0));
 
         // time select events
         [].forEach.call(this.timeEls.hours, hour => {
@@ -87,41 +89,52 @@ class TimePicker {
             minute.addEventListener('click', event => this.minuteSelect(event));
         });
         [].forEach.call(this.timeEls.hoursMilitary, hour => {
-            hour.addEventListener('click', event => this.hourMilitarySelect(event));
+            hour.addEventListener('click', event => this.militaryHourSelect(event));
         });
     }
 
     /**
-     * Show the picker
+     * Show the picker in the DOM
      *
      * @return {void}
      */
     show() {
-        const isMilitaryFormat = this.options.timeFormat === 'military';
+        const isMilitaryFormat = this.isMilitaryFormat();
 
         // blur input to prevent onscreen keyboard from displaying
         this.inputEl.blur();
+        this.toggleHoursVisible(true);
+        this.toggleMinutesVisible();
 
-        this.clockEls.hours.style.display = isMilitaryFormat ? 'none' : 'block';
-        this.clockEls.hoursMilitary.style.display = isMilitaryFormat ? 'block' : 'none';
         this.displayEls.meridiem.style.display = isMilitaryFormat ? 'none' : 'inline';
         this.meridiemEl.style.display = isMilitaryFormat ? 'none' : 'block';
-        this.clockEls.minutes.style.display = 'none';
         this.overlayEl.style.display = 'block';
     }
 
     /**
-     * Hide the picker and reset state
+     * Hide the picker in the DOM
      *
      * @return {void}
      */
     hide() {
         this.overlayEl.style.display = 'none';
         this.inputEl.dispatchEvent(new Event('blur'));
-        this.rotateHand(9);
-        this.toggleHourVisible(true);
+        this.resetState();
+    }
+
+    /**
+     * Reset picker state to defaults
+     *
+     * @return {void}
+     */
+    resetState() {
+        this.currentStep = 0;
+
+        this.toggleHoursVisible(true);
         this.toggleMinutesVisible();
-        this.step = 0;
+        this.timeEls.hours[9].click();
+        this.timeEls.minutes[9].click();
+        this.timeEls.hoursMilitary[9].click();
     }
 
     /**
@@ -154,6 +167,7 @@ class TimePicker {
     setDisplayTime(value, index) {
         const time = this.displayEls.time.innerHTML.split(':');
 
+        // pad with zero if selecting minutes and value is single digit
         time[index] = index === 1 && value < 10 ? `0${value}` : value;
         const newTime = time.join(':');
 
@@ -166,7 +180,7 @@ class TimePicker {
      * @param {integer} nodeIndex Index inside parentNode of the selected time
      * @return {void}
      */
-    rotateHand(nodeIndex) {
+    rotateHand(nodeIndex = 9) {
         // nodeIndex 0 is 3 elements behind 0deg so subtract 90 from the sum
         const rotateDeg = nodeIndex * 30 - 90;
         const styleVal = `rotate(${rotateDeg}deg)`;
@@ -177,28 +191,30 @@ class TimePicker {
     }
 
     /**
-     * Go to next step in time picking process
+     * Change to the specified step
      *
+     * @param {integer} step Index of step to change to
      * @return {void}
      */
-    nextStep() {
-        const nextStepAction = [
+    changeStep(step) {
+        const changeStepAction = [
             () => {
-                this.toggleHourVisible(true);
+                this.toggleHoursVisible(true);
                 this.toggleMinutesVisible();
             },
             () => {
-                this.toggleHourVisible();
+                this.toggleHoursVisible();
                 this.toggleMinutesVisible(true);
             },
             () => {
-                this.toggleHourVisible();
+                this.toggleHoursVisible();
                 this.toggleMinutesVisible();
                 this.timeSelected();
             },
-        ][this.currentStep + 1];
+        ][step];
 
-        nextStepAction();
+        this.currentStep = step;
+        changeStepAction();
     }
 
     /**
@@ -207,13 +223,12 @@ class TimePicker {
      * @param {boolean} isVisible Is clock face toggled visible or hidden
      * @return {void}
      */
-    toggleHourVisible(isVisible = false) {
+    toggleHoursVisible(isVisible = false) {
         const isMilitaryFormat = Boolean(this.options.timeFormat === 'military');
         const hourEl = this.clockEls[isMilitaryFormat ? 'hoursMilitary' : 'hours'];
 
         hourEl.style.display = isVisible ? 'block' : 'none';
-        this.rotateHand(9);
-        this.currentStep = 0;
+        this.rotateHand();
     }
 
     /**
@@ -224,8 +239,8 @@ class TimePicker {
      */
     toggleMinutesVisible(isVisible = false) {
         this.clockEls.minutes.style.display = isVisible ? 'block' : 'none';
-        this.rotateHand(9);
-        this.currentStep = 1;
+        this.buttonEls.back.style.display = isVisible ? 'inline-block' : 'none';
+        this.rotateHand();
     }
 
     timeSelected() {
@@ -275,6 +290,31 @@ class TimePicker {
         this.setActive(this.clockEls.minutes, newActive);
         this.rotateHand(nodeIndex);
         this.setDisplayTime(newActive.innerHTML, 1);
+    }
+
+    /**
+     * Military hour select event handler
+     *
+     * @param {Event} event Event object passed from listener
+     * @return {void}
+     */
+    militaryHourSelect(event) {
+        const newActive = event.toElement;
+        const containerEl = this.timeEls.hoursMilitary;
+        const nodeIndex = [].indexOf.call(containerEl, newActive);
+
+        this.setActive(this.clockEls.hoursMilitary, newActive);
+        this.rotateHand(nodeIndex > 11 ? nodeIndex - 12 : nodeIndex);
+        this.setDisplayTime(newActive.innerHTML, 0);
+    }
+
+    /**
+     * Check if picker set to military time mode
+     *
+     * @return {boolean} Is in military time mode
+     */
+    isMilitaryFormat() {
+        return Boolean(this.options.timeFormat === 'military');
     }
 }
 
