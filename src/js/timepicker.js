@@ -61,7 +61,10 @@ class TimePicker {
             militaryHours: this.clockEls.militaryHours.getElementsByTagName('li'),
         };
 
-        this.setEvents();
+        if (!this.hasEventsSet()) {
+            this.setEvents();
+            this.wrapperEl.classList.add('mtp-events-set');
+        }
     }
 
     /**
@@ -84,17 +87,17 @@ class TimePicker {
         // time select events
         [].forEach.call(this.timeEls.hours, hour => {
             hour.addEventListener('click', event => {
-                this.hourSelect(event, this.clockEls.hours, this.timeEls.hours, 0);
+                this.selectEvent(event, this.clockEls.hours, this.timeEls.hours, 0);
             });
         });
         [].forEach.call(this.timeEls.minutes, minute => {
             minute.addEventListener('click', event => {
-                this.minuteSelect(event, this.clockEls.minutes, this.timeEls.minutes, 1);
+                this.selectEvent(event, this.clockEls.minutes, this.timeEls.minutes, 1);
             });
         });
         [].forEach.call(this.timeEls.militaryHours, hour => {
             hour.addEventListener('click', event => {
-                this.militaryHourSelect(event, this.clockEls.militaryHours, this.timeEls.militaryHours, 0);
+                this.selectEvent(event, this.clockEls.militaryHours, this.timeEls.militaryHours, 0);
             });
         });
     }
@@ -292,6 +295,10 @@ class TimePicker {
      */
     isMilitaryFormat() {
         return Boolean(this.options.timeFormat === 'military');
+    }
+
+    hasEventsSet() {
+        return this.wrapperEl.classList.contains('mtp-events-set');
     }
 }
 
