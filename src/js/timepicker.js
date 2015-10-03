@@ -10,15 +10,10 @@ class TimePicker {
     /**
      * Initialize new TimePicker instance
      *
-     * @param {HTMLElement} inputEl Input element(s) to use with timepicker
-     * @param {object} options Configuration options to be merged with defaults
      * @return {TimePicker} New TimePicker instance
      */
-    constructor(inputEl, options = {}) {
-        this.inputEl = inputEl;
-        this.options = Object.assign(defaultOptions, options);
+    constructor() {
         this.currentStep = 0;
-
         this.setupElements();
 
         return this;
@@ -61,10 +56,17 @@ class TimePicker {
             militaryHours: this.clockEls.militaryHours.getElementsByTagName('li'),
         };
 
-        if (!this.hasEventsSet()) {
+        if (!this.isEventsSet()) {
             this.setEvents();
             this.wrapperEl.classList.add('mtp-events-set');
         }
+    }
+
+    addInput(inputEl, options = {}) {
+        const element = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
+
+        element.mtpOptions = Object.assign({}, defaultOptions, options);
+        element.addEventListener('focus', event => this.showEvent(event));
     }
 
     /**
@@ -73,9 +75,6 @@ class TimePicker {
      * @return {void}
      */
     setEvents() {
-        // open
-        this.inputEl.addEventListener('focus', () => this.show());
-
         // close
         this.overlayEl.addEventListener('click', event => this.hideEvent(event));
         this.buttonEls.cancel.addEventListener('click', event => this.hideEvent(event));
@@ -121,6 +120,17 @@ class TimePicker {
     }
 
     /**
+     * Event handle for input focus
+     *
+     * @param {Event} event Event object passed from listener
+     * @return {void}
+     */
+    showEvent(event) {
+        this.inputEl = event.target;
+        this.show();
+    }
+
+    /**
      * Hide the picker in the DOM
      *
      * @return {void}
@@ -129,6 +139,28 @@ class TimePicker {
         this.overlayEl.style.display = 'none';
         this.inputEl.dispatchEvent(new Event('blur'));
         this.resetState();
+    }
+
+    /**
+     * Hide the picker element on the page
+     *
+     * @param {Event} event Event object passed from event listener callback
+     * @return {void}
+     */
+    hideEvent(event) {
+        event.stopPropagation();
+
+        // only allow event based close if event.target contains one of these classes
+        // hack to prevent overlay close event from triggering on all elements
+        const allowedClasses = ['mtp-overlay', 'mtp-actions__cancel'];
+        const classList = event.target.classList;
+
+        allowedClasses.some(allowedClass => {
+            if (classList.contains(allowedClass)) {
+                this.hide();
+                return true;
+            }
+        });
     }
 
     /**
@@ -144,26 +176,6 @@ class TimePicker {
         this.timeEls.hours[9].click();
         this.timeEls.minutes[9].click();
         this.timeEls.militaryHours[9].click();
-    }
-
-    /**
-     * Hide the picker element on the page
-     *
-     * @param {Event} event Event object passed from event listener callback
-     * @return {void}
-     */
-    hideEvent(event) {
-        // only allow event based close if event.toElement contains one of these classes
-        // hack to prevent overlay close event from triggering on all elements
-        const allowedClasses = ['mtp-overlay', 'mtp-actions__cancel'];
-        const classList = event.toElement.classList;
-
-        allowedClasses.some(allowedClass => {
-            if (classList.contains(allowedClass)) {
-                this.hide();
-                return true;
-            }
-        });
     }
 
     /**
@@ -233,9 +245,10 @@ class TimePicker {
      * @return {void}
      */
     toggleHoursVisible(isVisible = false) {
-        const hourEl = this.clockEls[this.isMilitaryFormat() ? 'militaryHours' : 'hours'];
+        const isMilitaryFormat = this.isMilitaryFormat();
 
-        hourEl.style.display = isVisible ? 'block' : 'none';
+        this.clockEls.hours.style.display = isVisible && !isMilitaryFormat ? 'block' : 'none';
+        this.clockEls.militaryHours.style.display = isVisible && isMilitaryFormat ? 'block' : 'none';
         this.rotateHand();
     }
 
@@ -280,7 +293,9 @@ class TimePicker {
      * @return {void}
      */
     selectEvent(event, containerEl, listEls, displayIndex) {
-        const newActive = event.toElement;
+        event.stopPropagation();
+
+        const newActive = event.target;
         const nodeIndex = [].indexOf.call(listEls, newActive);
 
         this.setActive(containerEl, newActive);
@@ -294,15 +309,15 @@ class TimePicker {
      * @return {boolean} Is in military time mode
      */
     isMilitaryFormat() {
-        return Boolean(this.options.timeFormat === 'military');
+        return Boolean(this.inputEl.mtpOptions.timeFormat === 'military');
     }
 
-    hasEventsSet() {
+    isEventsSet() {
         return this.wrapperEl.classList.contains('mtp-events-set');
     }
 }
 
-// Object.assign polyfill so `babel/polyfill` isn't required
+// Object.assign polyfill so `babel/polyfill` is not required
 if (!Object.assign) {
     Object.defineProperty(Object, 'assign', {
         enumerable: false,
