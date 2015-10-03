@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use strict';
 
 var gulp = require('gulp'),
@@ -23,7 +24,6 @@ gulp.task('js', function() {
         .bundle()
         .on('error', function(error) {
             gutil.log(error);
-            this.emit('end');
         })
         .pipe(source('timepicker.js'))
         .pipe(gulp.dest('./dist/js'));
