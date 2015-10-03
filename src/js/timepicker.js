@@ -52,13 +52,13 @@ class TimePicker {
         this.clockEls = {
             hours: this.pickerEl.getElementsByClassName('mtp-clock__hours')[0],
             minutes: this.pickerEl.getElementsByClassName('mtp-clock__minutes')[0],
-            hoursMilitary: this.pickerEl.getElementsByClassName('mtp-clock__hours-military')[0],
+            militaryHours: this.pickerEl.getElementsByClassName('mtp-clock__hours-military')[0],
             hand: this.pickerEl.getElementsByClassName('mtp-clock__hand')[0],
         };
         this.timeEls = {
             hours: this.clockEls.hours.getElementsByTagName('li'),
             minutes: this.clockEls.minutes.getElementsByTagName('li'),
-            hoursMilitary: this.clockEls.hoursMilitary.getElementsByTagName('li'),
+            militaryHours: this.clockEls.militaryHours.getElementsByTagName('li'),
         };
 
         this.setEvents();
@@ -88,7 +88,7 @@ class TimePicker {
         [].forEach.call(this.timeEls.minutes, minute => {
             minute.addEventListener('click', event => this.minuteSelect(event));
         });
-        [].forEach.call(this.timeEls.hoursMilitary, hour => {
+        [].forEach.call(this.timeEls.militaryHours, hour => {
             hour.addEventListener('click', event => this.militaryHourSelect(event));
         });
     }
@@ -134,7 +134,7 @@ class TimePicker {
         this.toggleMinutesVisible();
         this.timeEls.hours[9].click();
         this.timeEls.minutes[9].click();
-        this.timeEls.hoursMilitary[9].click();
+        this.timeEls.militaryHours[9].click();
     }
 
     /**
@@ -167,7 +167,7 @@ class TimePicker {
     setDisplayTime(value, index) {
         const time = this.displayEls.time.innerHTML.split(':');
 
-        // pad with zero if selecting minutes and value is single digit
+        // prepend with zero if selecting minutes and value is single digit
         time[index] = index === 1 && value < 10 ? `0${value}` : value;
         const newTime = time.join(':');
 
@@ -225,7 +225,7 @@ class TimePicker {
      */
     toggleHoursVisible(isVisible = false) {
         const isMilitaryFormat = Boolean(this.options.timeFormat === 'military');
-        const hourEl = this.clockEls[isMilitaryFormat ? 'hoursMilitary' : 'hours'];
+        const hourEl = this.clockEls[isMilitaryFormat ? 'militaryHours' : 'hours'];
 
         hourEl.style.display = isVisible ? 'block' : 'none';
         this.rotateHand();
@@ -300,10 +300,10 @@ class TimePicker {
      */
     militaryHourSelect(event) {
         const newActive = event.toElement;
-        const containerEl = this.timeEls.hoursMilitary;
+        const containerEl = this.timeEls.militaryHours;
         const nodeIndex = [].indexOf.call(containerEl, newActive);
 
-        this.setActive(this.clockEls.hoursMilitary, newActive);
+        this.setActive(this.clockEls.militaryHours, newActive);
         this.rotateHand(nodeIndex > 11 ? nodeIndex - 12 : nodeIndex);
         this.setDisplayTime(newActive.innerHTML, 0);
     }
