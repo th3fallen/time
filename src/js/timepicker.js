@@ -113,6 +113,8 @@ class TimePicker {
         this.inputEl.blur();
         this.toggleHoursVisible(true);
         this.toggleMinutesVisible();
+        this.setDisplayTime(this.isMilitaryFormat() ? '00' : '12', 0);
+        this.setDisplayTime('0', 1);
 
         this.displayEls.meridiem.style.display = isMilitaryFormat ? 'none' : 'inline';
         this.meridiemEl.style.display = isMilitaryFormat ? 'none' : 'block';
@@ -228,8 +230,7 @@ class TimePicker {
                 this.toggleMinutesVisible(true);
             },
             () => {
-                this.toggleHoursVisible();
-                this.toggleMinutesVisible();
+                this.hide();
                 this.timeSelected();
             },
         ][step];
