@@ -12,14 +12,10 @@
         border-radius: 50%;
         line-height: 50px;
 
-        &:hover:not(.mtp-meridiem--active) {
+        &:hover:not(.mtp-clock--active) {
             background-color: $c-primary-light;
             color: $c-primary-text;
             cursor: pointer;
         }
     }
-}
-.mtp-meridiem--active {
-    background-color: $c-primary;
-    color: $c-text;
 }
