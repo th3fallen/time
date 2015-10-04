@@ -23,7 +23,10 @@ gulp.task('sass', function() {
 gulp.task('js', ['lint'], function() {
     return browserify('./src/js/timepicker.js', {debug: true})
         .bundle()
-        .on('error', gutil.log)
+        .on('error', function(error) {
+            gutil.log(error);
+            this.emit('end');
+        })
         .pipe(source('timepicker.js'))
         .pipe(gulp.dest('./dist/js'));
 });
@@ -32,8 +35,7 @@ gulp.task('lint', function() {
     var stream = gulp.src('./src/js/timepicker.js');
 
     return stream.pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failOnError());
+        .pipe(eslint.format());
 });
 
 gulp.task('watch', function() {
