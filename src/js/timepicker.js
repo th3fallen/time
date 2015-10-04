@@ -397,5 +397,5 @@ if (!Object.assign) {
     });
 }
 
-window.TimePicker = TimePicker;
-export default TimePicker;
+window.TimePicker = new TimePicker();
+export default new TimePicker();
