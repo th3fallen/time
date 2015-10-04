@@ -8,7 +8,8 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     browserify = require('browserify'),
     source = require('vinyl-source-stream'),
-    rename = require('gulp-rename');
+    rename = require('gulp-rename'),
+    eslint = require('gulp-eslint');
 
 gulp.task('sass', function() {
     var stream = gulp.src('./src/sass/main.scss');
@@ -19,14 +20,20 @@ gulp.task('sass', function() {
         .pipe(gulp.dest('./dist/css'));
 });
 
-gulp.task('js', function() {
+gulp.task('js', ['lint'], function() {
     return browserify('./src/js/timepicker.js', {debug: true})
         .bundle()
-        .on('error', function(error) {
-            gutil.log(error);
-        })
+        .on('error', gutil.log)
         .pipe(source('timepicker.js'))
         .pipe(gulp.dest('./dist/js'));
+});
+
+gulp.task('lint', function() {
+    var stream = gulp.src('./src/js/timepicker.js');
+
+    return stream.pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failOnError());
 });
 
 gulp.task('watch', function() {
