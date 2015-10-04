@@ -34,7 +34,10 @@ class TimePicker {
         this.overlayEl = document.getElementsByClassName('mtp-overlay')[0];
         this.wrapperEl = this.overlayEl.getElementsByClassName('mtp-wrapper')[0];
         this.pickerEl = this.wrapperEl.getElementsByClassName('mtp-picker')[0];
-        this.meridiemEl = this.wrapperEl.getElementsByClassName('mtp-meridiem')[0];
+        this.meridiemEls = {
+            wrapper: this.wrapperEl.getElementsByClassName('mtp-meridiem')[0],
+        };
+        this.meridiemEls.spans = this.meridiemEls.wrapper.getElementsByTagName('span');
         this.displayEls = {
             time: this.wrapperEl.getElementsByClassName('mtp-display__time')[0],
             meridiem: this.wrapperEl.getElementsByClassName('mtp-display__meridiem')[0],
@@ -90,20 +93,25 @@ class TimePicker {
         this.buttonEls.ok.addEventListener('click', () => this.changeStep(this.currentStep + 1));
         this.buttonEls.back.addEventListener('click', () => this.changeStep(0));
 
+        // meridiem select events
+        [].forEach.call(this.meridiemEls.spans, span => {
+            span.addEventListener('click', event => this.meridiemSelectEvent(event));
+        });
+
         // time select events
         [].forEach.call(this.timeEls.hours, hour => {
             hour.addEventListener('click', event => {
-                this.selectEvent(event, this.clockEls.hours, this.timeEls.hours, 0);
+                this.timeSelectEvent(event, this.clockEls.hours, this.timeEls.hours, 0);
             });
         });
         [].forEach.call(this.timeEls.minutes, minute => {
             minute.addEventListener('click', event => {
-                this.selectEvent(event, this.clockEls.minutes, this.timeEls.minutes, 1);
+                this.timeSelectEvent(event, this.clockEls.minutes, this.timeEls.minutes, 1);
             });
         });
         [].forEach.call(this.timeEls.militaryHours, hour => {
             hour.addEventListener('click', event => {
-                this.selectEvent(event, this.clockEls.militaryHours, this.timeEls.militaryHours, 0);
+                this.timeSelectEvent(event, this.clockEls.militaryHours, this.timeEls.militaryHours, 0);
             });
         });
     }
@@ -124,7 +132,7 @@ class TimePicker {
         this.setDisplayTime('0', 1);
 
         this.displayEls.meridiem.style.display = isMilitaryFormat ? 'none' : 'inline';
-        this.meridiemEl.style.display = isMilitaryFormat ? 'none' : 'block';
+        this.meridiemEls.wrapper.style.display = isMilitaryFormat ? 'none' : 'block';
         this.overlayEl.style.display = 'block';
     }
 
@@ -322,6 +330,24 @@ class TimePicker {
     }
 
     /**
+     * Meridiem select event handler
+     *
+     * @param {Evenet} event Event object passed from listener
+     * @return {void}
+     */
+    meridiemSelectEvent(event) {
+        const element = event.target;
+        const currentActive = this.meridiemEls.wrapper.getElementsByClassName('mtp-clock--active')[0];
+        const value = element.innerHTML;
+
+        if (element !== currentActive) {
+            currentActive.classList.remove('mtp-clock--active');
+            element.classList.add('mtp-clock--active');
+            this.displayEls.meridiem.innerHTML = value;
+        }
+    }
+
+    /**
      * Time select event handler
      *
      * @param {Event} event Event object passed from listener
@@ -330,7 +356,7 @@ class TimePicker {
      * @param {integer} displayIndex Index at which selected time should display [1: hours, 2: minutes]
      * @return {void}
      */
-    selectEvent(event, containerEl, listEls, displayIndex) {
+    timeSelectEvent(event, containerEl, listEls, displayIndex) {
         event.stopPropagation();
 
         const newActive = event.target;
