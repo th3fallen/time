@@ -241,8 +241,8 @@ class TimePicker {
                 this.rotateHand(this.getActiveIndex(minuteEls));
             },
             () => {
-                this.hide();
                 this.timeSelected();
+                this.hide();
             },
         ][step];
 
@@ -299,6 +299,11 @@ class TimePicker {
      * @return {void}
      */
     timeSelected() {
+        const time = this.displayEls.time.innerHTML;
+        const meridiem = this.isMilitaryFormat() ? '' : this.displayEls.meridiem.innerHTML;
+
+        this.inputEl.value = `${time} ${meridiem}`;
+        this.inputEl.dispatchEvent(new Event('input'));
     }
 
     /**
