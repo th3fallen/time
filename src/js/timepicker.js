@@ -56,12 +56,19 @@ class TimePicker {
             militaryHours: this.clockEls.militaryHours.getElementsByTagName('li'),
         };
 
-        if (!this.isEventsSet()) {
+        if (!this.hasSetEvents()) {
             this.setEvents();
             this.wrapperEl.classList.add('mtp-events-set');
         }
     }
 
+    /**
+     * Add input element to picker object
+     *
+     * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
+     * @param {object} options Options to merged with defaults and set to input element object
+     * @return {void}
+     */
     addInput(inputEl, options = {}) {
         const element = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
 
@@ -220,14 +227,18 @@ class TimePicker {
      * @return {void}
      */
     changeStep(step) {
+        const hourEls = this.isMilitaryFormat() ? this.timeEls.militaryHours : this.timeEls.hours;
+        const minuteEls = this.timeEls.minutes;
         const changeStepAction = [
             () => {
                 this.toggleHoursVisible(true);
                 this.toggleMinutesVisible();
+                this.rotateHand(this.getActiveIndex(hourEls));
             },
             () => {
                 this.toggleHoursVisible();
                 this.toggleMinutesVisible(true);
+                this.rotateHand(this.getActiveIndex(minuteEls));
             },
             () => {
                 this.hide();
@@ -250,7 +261,6 @@ class TimePicker {
 
         this.clockEls.hours.style.display = isVisible && !isMilitaryFormat ? 'block' : 'none';
         this.clockEls.militaryHours.style.display = isVisible && isMilitaryFormat ? 'block' : 'none';
-        this.rotateHand();
     }
 
     /**
@@ -262,11 +272,33 @@ class TimePicker {
     toggleMinutesVisible(isVisible = false) {
         this.clockEls.minutes.style.display = isVisible ? 'block' : 'none';
         this.buttonEls.back.style.display = isVisible ? 'inline-block' : 'none';
-        this.rotateHand();
     }
 
-    timeSelected() {
+    /**
+     * Get the active time element index
+     *
+     * @param {HTMLCollection} timeEls Collection of time elements to find active in
+     * @return {integer} Active element index
+     */
+    getActiveIndex(timeEls) {
+        let activeIndex = 0;
 
+        [].some.call(timeEls, (timeEl, index) => {
+            if (timeEl.classList.contains('mtp-clock--active')) {
+                activeIndex = index;
+                return true;
+            }
+        });
+
+        return activeIndex > 11 ? activeIndex - 12 : activeIndex;
+    }
+
+    /**
+     * Set selected time to input element
+     *
+     * @return {void}
+     */
+    timeSelected() {
     }
 
     /**
@@ -297,11 +329,10 @@ class TimePicker {
         event.stopPropagation();
 
         const newActive = event.target;
-        const nodeIndex = [].indexOf.call(listEls, newActive);
 
         this.setActive(containerEl, newActive);
-        this.rotateHand(nodeIndex > 11 ? nodeIndex - 12 : nodeIndex);
         this.setDisplayTime(newActive.innerHTML, displayIndex);
+        this.rotateHand(this.getActiveIndex(listEls));
     }
 
     /**
@@ -313,7 +344,12 @@ class TimePicker {
         return Boolean(this.inputEl.mtpOptions.timeFormat === 'military');
     }
 
-    isEventsSet() {
+    /**
+     * Check if picker object has already set events on picker elements
+     *
+     * @return {boolean} Has events been set on picker elements
+     */
+    hasSetEvents() {
         return this.wrapperEl.classList.contains('mtp-events-set');
     }
 }
