@@ -20,6 +20,33 @@ class TimePicker {
     }
 
     /**
+     * Add input element to picker object
+     *
+     * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
+     * @param {object} options Options to merged with defaults and set to input element object
+     * @return {void}
+     */
+    addInput(inputEl, options = {}) {
+        const element = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
+
+        element.mtpOptions = Object.assign({}, defaultOptions, options);
+        element.addEventListener('focus', event => this.showEvent(event));
+    }
+
+    /**
+     * Open picker with the input provided in context without binding events
+     *
+     * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
+     * @param {object} options Options to merged with defaults and set to input element object
+     * @return {void}
+     */
+    openOnInput(inputEl, options = {}) {
+        this.inputEl = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
+        this.inputEl.mtpOptions = Object.assign({}, defaultOptions, options);
+        this.show();
+    }
+
+    /**
      * Add template to DOM if no already, and cache elements use by picker
      *
      * @return {void}
@@ -63,20 +90,6 @@ class TimePicker {
             this.setEvents();
             this.wrapperEl.classList.add('mtp-events-set');
         }
-    }
-
-    /**
-     * Add input element to picker object
-     *
-     * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
-     * @param {object} options Options to merged with defaults and set to input element object
-     * @return {void}
-     */
-    addInput(inputEl, options = {}) {
-        const element = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
-
-        element.mtpOptions = Object.assign({}, defaultOptions, options);
-        element.addEventListener('focus', event => this.showEvent(event));
     }
 
     /**
@@ -213,12 +226,13 @@ class TimePicker {
     }
 
     /**
-     * Rotate the hand element to selected time. Rotation is done in increments of 30deg.
+     * Rotate the hand element to selected time
      *
-     * @param {integer} nodeIndex Index inside parentNode of the selected time
+     * @param {integer} nodeIndex Index of active element
      * @return {void}
      */
     rotateHand(nodeIndex = 9) {
+        // rotation is done in increments of 30deg
         // nodeIndex 0 is 3 elements behind 0deg so subtract 90 from the sum
         const rotateDeg = nodeIndex * 30 - 90;
         const styleVal = `rotate(${rotateDeg}deg)`;
