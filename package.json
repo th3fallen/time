@@ -2,7 +2,7 @@
   "name": "material-timepicker",
   "version": "0.0.1",
   "description": "material design timepicker",
-  "main": "index.js",
+  "main": "./dist/js/timepicker.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
