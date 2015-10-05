@@ -7,9 +7,11 @@ var gulp = require('gulp'),
     autoprefixer = require('autoprefixer'),
     gutil = require('gulp-util'),
     browserify = require('browserify'),
+    buffer = require('vinyl-buffer'),
     source = require('vinyl-source-stream'),
     rename = require('gulp-rename'),
-    eslint = require('gulp-eslint');
+    eslint = require('gulp-eslint'),
+    mochaPhantomJS = require('gulp-mocha-phantomjs');
 
 gulp.task('sass', function() {
     var stream = gulp.src('./src/sass/main.scss');
@@ -20,15 +22,36 @@ gulp.task('sass', function() {
         .pipe(gulp.dest('./dist/css'));
 });
 
-gulp.task('js', ['lint'], function() {
+gulp.task('js', ['lint', 'test'], function() {
     return browserify('./src/js/timepicker.js', {debug: true})
-        .bundle()
+    .bundle()
+    .on('error', function(error) {
+        gutil.log(error);
+        this.emit('end');
+    })
+    .pipe(source('timepicker.js'))
+    .pipe(gulp.dest('./dist/js'));
+});
+
+gulp.task('test', function() {
+    var bundle = browserify('./test/src/tests.js');
+
+    bundle.bundle().on('error', function(error) {
+        gutil.log(error);
+        this.emit('end');
+    })
+    .pipe(source('tests.js'))
+    .pipe(gulp.dest('./test/build'))
+    .on('end', function() {
+        gulp.src('./test/runner.html')
+        .pipe(mochaPhantomJS({reporter: 'dot'}))
         .on('error', function(error) {
             gutil.log(error);
-            this.emit('end');
-        })
-        .pipe(source('timepicker.js'))
-        .pipe(gulp.dest('./dist/js'));
+            this.end();
+        });
+    });
+
+    return bundle;
 });
 
 gulp.task('lint', function() {
@@ -41,4 +64,5 @@ gulp.task('lint', function() {
 gulp.task('watch', function() {
     gulp.watch('./src/sass/**/*.scss', ['sass']);
     gulp.watch(['./src/js/**/*.js', './src/html/**/*.html'], ['js']);
+    gulp.watch('./test/src/**/*.js', ['test']);
 });
