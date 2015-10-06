@@ -21,7 +21,7 @@ gulp.task('sass', function() {
         .pipe(gulp.dest('./dist/css'));
 });
 
-gulp.task('js', ['lint', 'test'], function() {
+gulp.task('js', ['lint', 'test:unit', 'test:behavior'], function() {
     return browserify('./src/js/timepicker.js', {debug: true})
     .bundle()
     .on('error', function(error) {
@@ -32,17 +32,38 @@ gulp.task('js', ['lint', 'test'], function() {
     .pipe(gulp.dest('./dist/js'));
 });
 
-gulp.task('test', function() {
-    var bundle = browserify('./test/src/tests.js');
+gulp.task('test:unit', function() {
+    var bundle = browserify('./test/unit/src/tests.js');
 
     bundle.bundle().on('error', function(error) {
         gutil.log(error);
         this.emit('end');
     })
     .pipe(source('tests.js'))
-    .pipe(gulp.dest('./test/build'))
+    .pipe(gulp.dest('./test/unit/build'))
     .on('end', function() {
-        gulp.src('./test/runner.html')
+        gulp.src('./test/unit/runner.html')
+        .pipe(mochaPhantomJS({reporter: 'dot'}))
+        .on('error', function(error) {
+            gutil.log(error);
+            this.end();
+        });
+    });
+
+    return bundle;
+});
+
+gulp.task('test:behavior', function() {
+    var bundle = browserify('./test/behavior/src/tests.js');
+
+    bundle.bundle().on('error', function(error) {
+        gutil.log(error);
+        this.emit('end');
+    })
+    .pipe(source('tests.js'))
+    .pipe(gulp.dest('./test/behavior/build'))
+    .on('end', function() {
+        gulp.src('./test/behavior/runner.html')
         .pipe(mochaPhantomJS({reporter: 'dot'}))
         .on('error', function(error) {
             gutil.log(error);
@@ -63,5 +84,6 @@ gulp.task('lint', function() {
 gulp.task('watch', function() {
     gulp.watch('./src/sass/**/*.scss', ['sass']);
     gulp.watch(['./src/js/**/*.js', './src/html/**/*.html'], ['js']);
-    gulp.watch('./test/src/**/*.js', ['test']);
+    gulp.watch('./test/unit/src/**/*.js', ['test:unit']);
+    gulp.watch('./test/behavior/src/**/*.js', ['test:behavior']);
 });
