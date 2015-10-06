@@ -41,10 +41,31 @@
                 <label class="mdl-textfield__label" for="timepicer">Pick Military Time</label>
             </div>
         </div>
+        <div class="inputs">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" name="timepicker" type="text" id="timepicker-2" />
+                <label class="mdl-textfield__label" for="timepicer">Pick Time</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" name="timepicker" type="text" id="timepicker-military-2" />
+                <label class="mdl-textfield__label" for="timepicer">Pick Military Time</label>
+            </div>
+        </div>
         <script type="text/javascript" src="./dist/js/timepicker.js"></script>
         <script type="text/javascript">
-            TimePicker.addInput('#timepicker');
-            TimePicker.addInput('#timepicker-military', {timeFormat: 'military'});
+            var timepicker = new TimePicker();
+            var standarEl = document.getElementById('timepicker-2');
+            var militaryEl = document.getElementById('timepicker-military-2');
+
+            timepicker.bindInput('#timepicker');
+            timepicker.bindInput('#timepicker-military', {timeFormat: 'military'});
+
+            standarEl.addEventListener('click', function(event) {
+                timepicker.openOnInput(event.target);
+            });
+            militaryEl.addEventListener('click', function(event) {
+                timepicker.openOnInput(event.target, {timeFormat: 'military'});
+            });
         </script>
     </body>
 </html>
