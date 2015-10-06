@@ -1,11 +1,6 @@
 import template from '../html/timepicker.html';
 import assign from './assign';
 
-const defaultOptions = {
-    // `standard` or `military` display hours
-    timeFormat: 'standard',
-};
-
 class TimePicker {
 
     /**
@@ -14,51 +9,15 @@ class TimePicker {
      * @return {TimePicker} New TimePicker instance
      */
     constructor() {
-        this.currentStep = 0;
-        this.setupElements();
-
-        return this;
-    }
-
-    /**
-     * Add input element to picker object
-     *
-     * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
-     * @param {object} options Options to merged with defaults and set to input element object
-     * @return {void}
-     */
-    addInput(inputEl, options = {}) {
-        const element = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
-
-        element.mtpOptions = assign({}, defaultOptions, options);
-        element.addEventListener('focus', event => this.showEvent(event));
-    }
-
-    /**
-     * Open picker with the input provided in context without binding events
-     *
-     * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
-     * @param {object} options Options to merged with defaults and set to input element object
-     * @return {void}
-     */
-    openOnInput(inputEl, options = {}) {
-        this.inputEl = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
-        this.inputEl.mtpOptions = assign({}, defaultOptions, options);
-        this.show();
-    }
-
-    /**
-     * Add template to DOM if no already, and cache elements use by picker
-     *
-     * @return {void}
-     */
-    setupElements() {
-        const mtpExists = Boolean(document.getElementsByClassName('mtp-overlay')[0]);
-
-        if (!mtpExists) {
+        if (!this.isTemplateInDOM()) {
             document.body.insertAdjacentHTML('beforeend', template);
         }
 
+        this.currentStep = 0;
+        this.defaultOptions = {
+            // `standard` or `military` display hours
+            timeFormat: 'standard',
+        };
         this.overlayEl = document.getElementsByClassName('mtp-overlay')[0];
         this.wrapperEl = this.overlayEl.getElementsByClassName('mtp-wrapper')[0];
         this.pickerEl = this.wrapperEl.getElementsByClassName('mtp-picker')[0];
@@ -91,6 +50,35 @@ class TimePicker {
             this.setEvents();
             this.wrapperEl.classList.add('mtp-events-set');
         }
+
+        return this;
+    }
+
+    /**
+     * Bind event to the input element to open when `focus` event is triggered
+     *
+     * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
+     * @param {object} options Options to merged with defaults and set to input element object
+     * @return {void}
+     */
+    bindInput(inputEl, options = {}) {
+        const element = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
+
+        element.mtpOptions = assign({}, this.defaultOptions, options);
+        element.addEventListener('focus', event => this.showEvent(event));
+    }
+
+    /**
+     * Open picker with the input provided in context without binding events
+     *
+     * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
+     * @param {object} options Options to merged with defaults and set to input element object
+     * @return {void}
+     */
+    openOnInput(inputEl, options = {}) {
+        this.inputEl = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
+        this.inputEl.mtpOptions = assign({}, this.defaultOptions, options);
+        this.show();
     }
 
     /**
@@ -398,7 +386,17 @@ class TimePicker {
     hasSetEvents() {
         return this.wrapperEl.classList.contains('mtp-events-set');
     }
+
+    /**
+     * Check if template has already been appended to DOM
+     *
+     * @return {boolean} Is template in DOM
+     */
+    isTemplateInDOM() {
+        return Boolean(document.getElementsByClassName('mtp-overlay')[0]);
+    }
 }
 
-window.TimePicker = new TimePicker();
-export default new TimePicker();
+
+window.TimePicker = TimePicker;
+export default TimePicker;
