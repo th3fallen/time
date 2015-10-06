@@ -9,10 +9,7 @@ class TimePicker {
      * @return {TimePicker} New TimePicker instance
      */
     constructor() {
-        if (!this.isTemplateInDOM()) {
-            document.body.insertAdjacentHTML('beforeend', template);
-        }
-
+        this.setupTemplate();
         this.currentStep = 0;
         this.defaultOptions = {
             // `standard` or `military` display hours
@@ -45,13 +42,20 @@ class TimePicker {
             minutes: this.clockEls.minutes.getElementsByTagName('li'),
             militaryHours: this.clockEls.militaryHours.getElementsByTagName('li'),
         };
-
-        if (!this.hasSetEvents()) {
-            this.setEvents();
-            this.wrapperEl.classList.add('mtp-events-set');
-        }
+        this.setEvents();
 
         return this;
+    }
+
+    /**
+     * Setup the template in DOM if not already
+     *
+     * @return {void}
+     */
+    setupTemplate() {
+        if (!this.isTemplateInDOM()) {
+            document.body.insertAdjacentHTML('beforeend', template);
+        }
     }
 
     /**
@@ -87,35 +91,38 @@ class TimePicker {
      * @return {void}
      */
     setEvents() {
-        // close
-        this.overlayEl.addEventListener('click', event => this.hideEvent(event));
-        this.buttonEls.cancel.addEventListener('click', event => this.hideEvent(event));
+        if (!this.hasSetEvents()) {
+            // close
+            this.overlayEl.addEventListener('click', event => this.hideEvent(event));
+            this.buttonEls.cancel.addEventListener('click', event => this.hideEvent(event));
 
-        // next/prev step actions
-        this.buttonEls.ok.addEventListener('click', () => this.changeStep(this.currentStep + 1));
-        this.buttonEls.back.addEventListener('click', () => this.changeStep(0));
+            // next/prev step actions
+            this.buttonEls.ok.addEventListener('click', () => this.changeStep(this.currentStep + 1));
+            this.buttonEls.back.addEventListener('click', () => this.changeStep(0));
 
-        // meridiem select events
-        [].forEach.call(this.meridiemEls.spans, span => {
-            span.addEventListener('click', event => this.meridiemSelectEvent(event));
-        });
+            // meridiem select events
+            [].forEach.call(this.meridiemEls.spans, span => {
+                span.addEventListener('click', event => this.meridiemSelectEvent(event));
+            });
 
-        // time select events
-        [].forEach.call(this.timeEls.hours, hour => {
-            hour.addEventListener('click', event => {
-                this.timeSelectEvent(event, this.clockEls.hours, this.timeEls.hours, 0);
+            // time select events
+            [].forEach.call(this.timeEls.hours, hour => {
+                hour.addEventListener('click', event => {
+                    this.timeSelectEvent(event, this.clockEls.hours, this.timeEls.hours, 0);
+                });
             });
-        });
-        [].forEach.call(this.timeEls.minutes, minute => {
-            minute.addEventListener('click', event => {
-                this.timeSelectEvent(event, this.clockEls.minutes, this.timeEls.minutes, 1);
+            [].forEach.call(this.timeEls.minutes, minute => {
+                minute.addEventListener('click', event => {
+                    this.timeSelectEvent(event, this.clockEls.minutes, this.timeEls.minutes, 1);
+                });
             });
-        });
-        [].forEach.call(this.timeEls.militaryHours, hour => {
-            hour.addEventListener('click', event => {
-                this.timeSelectEvent(event, this.clockEls.militaryHours, this.timeEls.militaryHours, 0);
+            [].forEach.call(this.timeEls.militaryHours, hour => {
+                hour.addEventListener('click', event => {
+                    this.timeSelectEvent(event, this.clockEls.militaryHours, this.timeEls.militaryHours, 0);
+                });
             });
-        });
+            this.wrapperEl.classList.add('mtp-events-set');
+        }
     }
 
     /**
