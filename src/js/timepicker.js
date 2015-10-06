@@ -1,4 +1,5 @@
 import template from '../html/timepicker.html';
+import assign from './assign';
 
 const defaultOptions = {
     // `standard` or `military` display hours
@@ -29,7 +30,7 @@ class TimePicker {
     addInput(inputEl, options = {}) {
         const element = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
 
-        element.mtpOptions = Object.assign({}, defaultOptions, options);
+        element.mtpOptions = assign({}, defaultOptions, options);
         element.addEventListener('focus', event => this.showEvent(event));
     }
 
@@ -42,7 +43,7 @@ class TimePicker {
      */
     openOnInput(inputEl, options = {}) {
         this.inputEl = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
-        this.inputEl.mtpOptions = Object.assign({}, defaultOptions, options);
+        this.inputEl.mtpOptions = assign({}, defaultOptions, options);
         this.show();
     }
 
@@ -397,44 +398,6 @@ class TimePicker {
     hasSetEvents() {
         return this.wrapperEl.classList.contains('mtp-events-set');
     }
-}
-
-// Object.assign polyfill so `babel/polyfill` is not required
-if (!Object.assign) {
-    Object.defineProperty(Object, 'assign', {
-        enumerable: false,
-        configurable: true,
-        writable: true,
-        value: target => {
-            const to = Object(target);
-
-            if (target === 'undefined' || target === null) {
-                throw new TypeError('Cannot convert first argument to object');
-            }
-
-            for (let inc = 1; inc < arguments.length; inc += 1) {
-                let nextSource = arguments[inc];
-
-                if (nextSource === 'undefined' || nextSource === null) {
-                    continue;
-                }
-
-                nextSource = Object(nextSource);
-                const keysArray = Object.keys(nextSource);
-
-                for (let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1) {
-                    const nextKey = keysArray[nextIndex];
-                    const desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-
-                    if (desc !== 'undefined' && desc.enumerable) {
-                        to[nextKey] = nextSource[nextKey];
-                    }
-                }
-            }
-
-            return to;
-        },
-    });
 }
 
 window.TimePicker = new TimePicker();
