@@ -12,37 +12,28 @@ class TimePicker {
         this.template = template;
         this.setupTemplate();
         this.currentStep = 0;
-        this.defaultOptions = {
-            // `standard` or `military` display hours
-            timeFormat: 'standard',
-        };
-        this.overlayEl = document.getElementsByClassName('mtp-overlay')[0];
-        this.wrapperEl = this.overlayEl.getElementsByClassName('mtp-wrapper')[0];
-        this.pickerEl = this.wrapperEl.getElementsByClassName('mtp-picker')[0];
-        this.meridiemEls = {
-            wrapper: this.wrapperEl.getElementsByClassName('mtp-meridiem')[0],
-        };
-        this.meridiemEls.spans = this.meridiemEls.wrapper.getElementsByTagName('span');
-        this.displayEls = {
-            time: this.wrapperEl.getElementsByClassName('mtp-display__time')[0],
-            meridiem: this.wrapperEl.getElementsByClassName('mtp-display__meridiem')[0],
-        };
-        this.buttonEls = {
-            cancel: this.pickerEl.getElementsByClassName('mtp-actions__cancel')[0],
-            back: this.pickerEl.getElementsByClassName('mtp-actions__back')[0],
-            ok: this.pickerEl.getElementsByClassName('mtp-actions__ok')[0],
-        };
-        this.clockEls = {
-            hours: this.pickerEl.getElementsByClassName('mtp-clock__hours')[0],
-            minutes: this.pickerEl.getElementsByClassName('mtp-clock__minutes')[0],
-            militaryHours: this.pickerEl.getElementsByClassName('mtp-clock__hours-military')[0],
-            hand: this.pickerEl.getElementsByClassName('mtp-clock__hand')[0],
-        };
-        this.timeEls = {
-            hours: this.clockEls.hours.getElementsByTagName('li'),
-            minutes: this.clockEls.minutes.getElementsByTagName('li'),
-            militaryHours: this.clockEls.militaryHours.getElementsByTagName('li'),
-        };
+        this.defaultOptions = {};
+        // `standard` or `military` display hours
+        this.defaultOptions.timeFormat = 'standard';
+        this.cachedEls = {};
+        this.cachedEls.overlay = document.getElementsByClassName('mtp-overlay')[0];
+        this.cachedEls.wrapper = this.cachedEls.overlay.getElementsByClassName('mtp-wrapper')[0];
+        this.cachedEls.picker = this.cachedEls.wrapper.getElementsByClassName('mtp-picker')[0];
+        this.cachedEls.meridiem = this.cachedEls.wrapper.getElementsByClassName('mtp-meridiem')[0];
+        this.cachedEls.meridiemSpans = this.cachedEls.meridiem.getElementsByTagName('span');
+        this.cachedEls.displayTime = this.cachedEls.wrapper.getElementsByClassName('mtp-display__time')[0];
+        this.cachedEls.displayMeridiem = this.cachedEls.wrapper.getElementsByClassName('mtp-display__meridiem')[0];
+        this.cachedEls.buttonCancel = this.cachedEls.picker.getElementsByClassName('mtp-actions__cancel')[0];
+        this.cachedEls.buttonBack = this.cachedEls.picker.getElementsByClassName('mtp-actions__back')[0];
+        this.cachedEls.buttonOk = this.cachedEls.picker.getElementsByClassName('mtp-actions__ok')[0];
+        this.cachedEls.clockHours = this.cachedEls.picker.getElementsByClassName('mtp-clock__hours')[0];
+        this.cachedEls.clockMinutes = this.cachedEls.picker.getElementsByClassName('mtp-clock__minutes')[0];
+        this.cachedEls.clockMilitaryHours = this.cachedEls.picker.getElementsByClassName('mtp-clock__hours-military')[0];
+        this.cachedEls.clockHand = this.cachedEls.picker.getElementsByClassName('mtp-clock__hand')[0];
+        this.cachedEls.clockHoursLi = this.cachedEls.clockHours.getElementsByTagName('li');
+        this.cachedEls.clockMinutesLi = this.cachedEls.clockMinutes.getElementsByTagName('li');
+        this.cachedEls.clockMilitaryHoursLi = this.cachedEls.clockMilitaryHours.getElementsByTagName('li');
+
         this.setEvents();
 
         return this;
@@ -94,35 +85,35 @@ class TimePicker {
     setEvents() {
         if (!this.hasSetEvents()) {
             // close
-            this.overlayEl.addEventListener('click', event => this.hideEvent(event));
-            this.buttonEls.cancel.addEventListener('click', event => this.hideEvent(event));
+            this.cachedEls.overlay.addEventListener('click', event => this.hideEvent(event));
+            this.cachedEls.buttonCancel.addEventListener('click', event => this.hideEvent(event));
 
             // next/prev step actions
-            this.buttonEls.ok.addEventListener('click', () => this.changeStep(this.currentStep + 1));
-            this.buttonEls.back.addEventListener('click', () => this.changeStep(0));
+            this.cachedEls.buttonOk.addEventListener('click', () => this.changeStep(this.currentStep + 1));
+            this.cachedEls.buttonBack.addEventListener('click', () => this.changeStep(0));
 
             // meridiem select events
-            [].forEach.call(this.meridiemEls.spans, span => {
+            [].forEach.call(this.cachedEls.meridiemSpans, span => {
                 span.addEventListener('click', event => this.meridiemSelectEvent(event));
             });
 
             // time select events
-            [].forEach.call(this.timeEls.hours, hour => {
+            [].forEach.call(this.cachedEls.clockHoursLi, hour => {
                 hour.addEventListener('click', event => {
-                    this.timeSelectEvent(event, this.clockEls.hours, this.timeEls.hours, 0);
+                    this.timeSelectEvent(event, this.cachedEls.clockHours, this.cachedEls.clockHoursLi, 0);
                 });
             });
-            [].forEach.call(this.timeEls.minutes, minute => {
+            [].forEach.call(this.cachedEls.clockMinutesLi, minute => {
                 minute.addEventListener('click', event => {
-                    this.timeSelectEvent(event, this.clockEls.minutes, this.timeEls.minutes, 1);
+                    this.timeSelectEvent(event, this.cachedEls.clockMinutes, this.cachedEls.clockMinutesLi, 1);
                 });
             });
-            [].forEach.call(this.timeEls.militaryHours, hour => {
+            [].forEach.call(this.cachedEls.clockMilitaryHoursLi, hour => {
                 hour.addEventListener('click', event => {
-                    this.timeSelectEvent(event, this.clockEls.militaryHours, this.timeEls.militaryHours, 0);
+                    this.timeSelectEvent(event, this.cachedEls.clockMilitaryHours, this.cachedEls.clockMilitaryHoursLi, 0);
                 });
             });
-            this.wrapperEl.classList.add('mtp-events-set');
+            this.cachedEls.wrapper.classList.add('mtp-events-set');
         }
     }
 
@@ -141,9 +132,9 @@ class TimePicker {
         this.setDisplayTime(this.isMilitaryFormat() ? '00' : '12', 0);
         this.setDisplayTime('0', 1);
 
-        this.displayEls.meridiem.style.display = isMilitaryFormat ? 'none' : 'inline';
-        this.meridiemEls.wrapper.style.display = isMilitaryFormat ? 'none' : 'block';
-        this.overlayEl.style.display = 'block';
+        this.cachedEls.displayMeridiem.style.display = isMilitaryFormat ? 'none' : 'inline';
+        this.cachedEls.meridiem.style.display = isMilitaryFormat ? 'none' : 'block';
+        this.cachedEls.overlay.style.display = 'block';
     }
 
     /**
@@ -163,7 +154,7 @@ class TimePicker {
      * @return {void}
      */
     hide() {
-        this.overlayEl.style.display = 'none';
+        this.cachedEls.overlay.style.display = 'none';
         this.inputEl.dispatchEvent(new Event('blur'));
         this.resetState();
     }
@@ -200,9 +191,9 @@ class TimePicker {
 
         this.toggleHoursVisible(true);
         this.toggleMinutesVisible();
-        this.timeEls.hours[9].click();
-        this.timeEls.minutes[9].click();
-        this.timeEls.militaryHours[9].click();
+        this.cachedEls.clockHoursLi[9].click();
+        this.cachedEls.clockMinutesLi[9].click();
+        this.cachedEls.clockMilitaryHoursLi[9].click();
     }
 
     /**
@@ -213,13 +204,13 @@ class TimePicker {
      * @return {void}
      */
     setDisplayTime(value, index) {
-        const time = this.displayEls.time.innerHTML.split(':');
+        const time = this.cachedEls.displayTime.innerHTML.split(':');
 
         // prepend with zero if selecting minutes and value is single digit
         time[index] = index === 1 && value < 10 ? `0${value}` : value;
         const newTime = time.join(':');
 
-        this.displayEls.time.innerHTML = newTime;
+        this.cachedEls.displayTime.innerHTML = newTime;
     }
 
     /**
@@ -234,9 +225,9 @@ class TimePicker {
         const rotateDeg = nodeIndex * 30 - 90;
         const styleVal = `rotate(${rotateDeg}deg)`;
 
-        this.clockEls.hand.style.transform = styleVal;
-        this.clockEls.hand.style['-webkit-transform'] = styleVal;
-        this.clockEls.hand.style['-ms-transform'] = styleVal;
+        this.cachedEls.clockHand.style.transform = styleVal;
+        this.cachedEls.clockHand.style['-webkit-transform'] = styleVal;
+        this.cachedEls.clockHand.style['-ms-transform'] = styleVal;
     }
 
     /**
@@ -246,8 +237,8 @@ class TimePicker {
      * @return {void}
      */
     changeStep(step) {
-        const hourEls = this.isMilitaryFormat() ? this.timeEls.militaryHours : this.timeEls.hours;
-        const minuteEls = this.timeEls.minutes;
+        const hourEls = this.isMilitaryFormat() ? this.cachedEls.clockMilitaryHoursLi : this.cachedEls.clockHoursLi;
+        const minuteEls = this.cachedEls.clockMinutesLi;
         const changeStepAction = [
             () => {
                 this.toggleHoursVisible(true);
@@ -278,8 +269,8 @@ class TimePicker {
     toggleHoursVisible(isVisible = false) {
         const isMilitaryFormat = this.isMilitaryFormat();
 
-        this.clockEls.hours.style.display = isVisible && !isMilitaryFormat ? 'block' : 'none';
-        this.clockEls.militaryHours.style.display = isVisible && isMilitaryFormat ? 'block' : 'none';
+        this.cachedEls.clockHours.style.display = isVisible && !isMilitaryFormat ? 'block' : 'none';
+        this.cachedEls.clockMilitaryHours.style.display = isVisible && isMilitaryFormat ? 'block' : 'none';
     }
 
     /**
@@ -289,8 +280,8 @@ class TimePicker {
      * @return {void}
      */
     toggleMinutesVisible(isVisible = false) {
-        this.clockEls.minutes.style.display = isVisible ? 'block' : 'none';
-        this.buttonEls.back.style.display = isVisible ? 'inline-block' : 'none';
+        this.cachedEls.clockMinutes.style.display = isVisible ? 'block' : 'none';
+        this.cachedEls.buttonBack.style.display = isVisible ? 'inline-block' : 'none';
     }
 
     /**
@@ -318,8 +309,8 @@ class TimePicker {
      * @return {void}
      */
     timeSelected() {
-        const time = this.displayEls.time.innerHTML;
-        const meridiem = this.isMilitaryFormat() ? '' : this.displayEls.meridiem.innerHTML;
+        const time = this.cachedEls.displayTime.innerHTML;
+        const meridiem = this.isMilitaryFormat() ? '' : this.cachedEls.displayMeridiem.innerHTML;
 
         this.inputEl.value = `${time} ${meridiem}`;
         this.inputEl.dispatchEvent(new Event('input'));
@@ -348,13 +339,13 @@ class TimePicker {
      */
     meridiemSelectEvent(event) {
         const element = event.target;
-        const currentActive = this.meridiemEls.wrapper.getElementsByClassName('mtp-clock--active')[0];
+        const currentActive = this.cachedEls.meridiem.getElementsByClassName('mtp-clock--active')[0];
         const value = element.innerHTML;
 
         if (element !== currentActive) {
             currentActive.classList.remove('mtp-clock--active');
             element.classList.add('mtp-clock--active');
-            this.displayEls.meridiem.innerHTML = value;
+            this.cachedEls.displayMeridiem.innerHTML = value;
         }
     }
 
@@ -392,7 +383,7 @@ class TimePicker {
      * @return {boolean} Has events been set on picker elements
      */
     hasSetEvents() {
-        return this.wrapperEl.classList.contains('mtp-events-set');
+        return this.cachedEls.wrapper.classList.contains('mtp-events-set');
     }
 
     /**
@@ -404,7 +395,6 @@ class TimePicker {
         return Boolean(document.getElementsByClassName('mtp-overlay')[0]);
     }
 }
-
 
 window.TimePicker = TimePicker;
 export default TimePicker;
