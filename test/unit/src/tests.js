@@ -16,7 +16,7 @@ describe('TimePicker Unit Tests', function() {
             insertAdjacentHTMLStub.restore();
         });
 
-        it('should insert template in DOM if not already', function() {
+        it('should insert template in DOM if #isTemplateInDOM returns false', function() {
             isTemplateInDOMStub.onFirstCall().returns(false);
             picker.setupTemplate();
 
@@ -25,7 +25,7 @@ describe('TimePicker Unit Tests', function() {
             expect(insertAdjacentHTMLStub.calledWith('beforeend', picker.template)).to.equal(true);
         });
 
-        it('should not insert template if already in DOM', function() {
+        it('should not insert template in DOM if #isTemplateInDOM returns true', function() {
             isTemplateInDOMStub.onFirstCall().returns(true);
             picker.setupTemplate();
 
