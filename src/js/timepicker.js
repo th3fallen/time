@@ -9,6 +9,7 @@ class TimePicker {
      * @return {TimePicker} New TimePicker instance
      */
     constructor() {
+        this.template = template;
         this.setupTemplate();
         this.currentStep = 0;
         this.defaultOptions = {
