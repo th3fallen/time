@@ -419,10 +419,84 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#resetState', function() {
+        let toggleHoursVisibleSpy, toggleMinutesVisibleSpy, isMilitaryFormatStub, hoursLiDispatchEventSpy,
+        minutesLiDispatchEventSpy, militaryHoursLiDispatchEventSpy;
+
+        beforeEach(function() {
+            const cachedEls = picker.cachedEls;
+
+            picker.currentStep = 2;
+            picker.inputEl = document.createElement('input');
+            picker.inputEl.mtpOptions = picker.defaultOptions;
+            isMilitaryFormatStub = sinon.stub(picker, 'isMilitaryFormat');
+            toggleHoursVisibleSpy = sinon.spy(picker, 'toggleHoursVisible');
+            toggleMinutesVisibleSpy = sinon.spy(picker, 'toggleMinutesVisible');
+            hoursLiDispatchEventSpy = sinon.spy(cachedEls.clockHoursLi[9], 'dispatchEvent');
+            minutesLiDispatchEventSpy = sinon.spy(cachedEls.clockMinutesLi[9], 'dispatchEvent');
+            militaryHoursLiDispatchEventSpy = sinon.spy(cachedEls.clockMilitaryHoursLi[9], 'dispatchEvent');
+        });
+
+        afterEach(function() {
+            isMilitaryFormatStub.restore();
+            toggleHoursVisibleSpy.restore();
+            toggleMinutesVisibleSpy.restore();
+            hoursLiDispatchEventSpy.restore();
+            minutesLiDispatchEventSpy.restore();
+            militaryHoursLiDispatchEventSpy.restore();
+        });
+
+        it('should set currentStep to 0', function() {
+            expect(picker.currentStep).to.equal(2);
+
+            picker.resetState();
+
+            expect(picker.currentStep).to.equal(0);
+        });
+
+        it('should call #toggleHoursVisible with parameters true, and result of #isMilitaryFormat', function() {
+            isMilitaryFormatStub.onCall(0).returns(true);
+            isMilitaryFormatStub.onCall(1).returns(false);
+
+            picker.resetState();
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(toggleHoursVisibleSpy.calledWith(true, true)).to.be.true;
+
+            picker.resetState();
+
+            expect(isMilitaryFormatStub.calledTwice).to.be.true;
+            expect(toggleHoursVisibleSpy.calledWith(true, false)).to.be.true;
+        });
+
+        it('should call #toggleMinutesVisible', function() {
+            picker.resetState();
+
+            expect(toggleMinutesVisibleSpy.calledOnce).to.be.true;
+        });
+
+        it('should call dispatchEvent with click event on cachedEls.clockHoursLi[9]', function() {
+            picker.resetState();
+
+            expect(hoursLiDispatchEventSpy.calledOnce).to.be.true;
+            expect(hoursLiDispatchEventSpy.calledWith(sinon.match(new Event('click')))).to.be.true;
+        });
+
+        it('should call dispatchEvent with click event on cachedEls.clockMinutesLi[9]', function() {
+            picker.resetState();
+
+            expect(minutesLiDispatchEventSpy.calledOnce).to.be.true;
+            expect(minutesLiDispatchEventSpy.calledWith(sinon.match(new Event('click')))).to.be.true;
+        });
+
+        it('should call dispatchEvent with click event on cachedEls.clockMilitaryHoursLi[9]', function() {
+            picker.resetState();
+
+            expect(militaryHoursLiDispatchEventSpy.calledOnce).to.be.true;
+            expect(militaryHoursLiDispatchEventSpy.calledWith(sinon.match(new Event('click')))).to.be.true;
+        });
     });
 
     describe('#setDisplayTime', function() {
-
     });
 
     describe('#rotateHand', function() {
