@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
+        <script src="../../node_modules/source-map-support/browser-source-map-support.js"></script>
         <script  type="text/javascript">
             var userAgent = window.navigator.userAgent;
             var isPhantomJS = userAgent.search('PhantomJS') >= 0;
@@ -16,6 +17,8 @@
                     e.initEvent(type, dict.bubbles, dict.catchable);
                     return e;
                 }
+
+                sourceMapSupport.install();
             }
         </script>
     </head>
