@@ -189,12 +189,11 @@ class TimePicker {
      */
     resetState() {
         this.currentStep = 0;
-
         this.toggleHoursVisible(true, this.isMilitaryFormat());
         this.toggleMinutesVisible();
-        this.cachedEls.clockHoursLi[9].click();
-        this.cachedEls.clockMinutesLi[9].click();
-        this.cachedEls.clockMilitaryHoursLi[9].click();
+        this.cachedEls.clockHoursLi[9].dispatchEvent(new Event('click'));
+        this.cachedEls.clockMinutesLi[9].dispatchEvent(new Event('click'));
+        this.cachedEls.clockMilitaryHoursLi[9].dispatchEvent(new Event('click'));
     }
 
     /**
@@ -209,9 +208,7 @@ class TimePicker {
 
         // prepend with zero if selecting minutes and value is single digit
         time[index] = index === 1 && value < 10 ? `0${value}` : value;
-        const newTime = time.join(':');
-
-        this.cachedEls.displayTime.innerHTML = newTime;
+        this.cachedEls.displayTime.innerHTML = time.join(':');
     }
 
     /**
