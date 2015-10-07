@@ -128,9 +128,9 @@ class TimePicker {
 
         // blur input to prevent onscreen keyboard from displaying
         this.inputEl.blur();
-        this.toggleHoursVisible(true);
+        this.toggleHoursVisible(true, isMilitaryFormat);
         this.toggleMinutesVisible();
-        this.setDisplayTime(this.isMilitaryFormat() ? '00' : '12', 0);
+        this.setDisplayTime(isMilitaryFormat ? '00' : '12', 0);
         this.setDisplayTime('0', 1);
 
         this.cachedEls.displayMeridiem.style.display = isMilitaryFormat ? 'none' : 'inline';
@@ -190,7 +190,7 @@ class TimePicker {
     resetState() {
         this.currentStep = 0;
 
-        this.toggleHoursVisible(true);
+        this.toggleHoursVisible(true, this.isMilitaryFormat());
         this.toggleMinutesVisible();
         this.cachedEls.clockHoursLi[9].click();
         this.cachedEls.clockMinutesLi[9].click();
@@ -238,11 +238,12 @@ class TimePicker {
      * @return {void}
      */
     changeStep(step) {
-        const hourEls = this.isMilitaryFormat() ? this.cachedEls.clockMilitaryHoursLi : this.cachedEls.clockHoursLi;
+        const isMilitaryFormat = this.isMilitaryFormat();
+        const hourEls = isMilitaryFormat ? this.cachedEls.clockMilitaryHoursLi : this.cachedEls.clockHoursLi;
         const minuteEls = this.cachedEls.clockMinutesLi;
         const changeStepAction = [
             () => {
-                this.toggleHoursVisible(true);
+                this.toggleHoursVisible(true, isMilitaryFormat);
                 this.toggleMinutesVisible();
                 this.rotateHand(this.getActiveIndex(hourEls));
             },
@@ -265,11 +266,10 @@ class TimePicker {
      * Toggle hour (both military and standard) clock visiblity in DOM
      *
      * @param {boolean} isVisible Is clock face toggled visible or hidden
+     * @param {boolean} isMilitaryFormat Is using military hour format
      * @return {void}
      */
-    toggleHoursVisible(isVisible = false) {
-        const isMilitaryFormat = this.isMilitaryFormat();
-
+    toggleHoursVisible(isVisible = false, isMilitaryFormat = false) {
         this.cachedEls.clockHours.style.display = isVisible && !isMilitaryFormat ? 'block' : 'none';
         this.cachedEls.clockMilitaryHours.style.display = isVisible && isMilitaryFormat ? 'block' : 'none';
     }
