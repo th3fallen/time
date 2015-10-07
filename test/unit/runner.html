@@ -3,6 +3,21 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
+        <script  type="text/javascript">
+            var userAgent = window.navigator.userAgent;
+            var isPhantomJS = userAgent.search('PhantomJS') >= 0;
+
+            if (isPhantomJS) {
+                function Event(type, dict) {
+                    var e = document.createEvent("Events");
+                    dict = dict || {};
+                    dict.bubbles = dict.bubbles || false;
+                    dict.catchable = dict.catchable || false;
+                    e.initEvent(type, dict.bubbles, dict.catchable);
+                    return e;
+                }
+            }
+        </script>
     </head>
     <body>
         <div id="mocha"></div>
