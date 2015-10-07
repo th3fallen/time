@@ -497,6 +497,36 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#setDisplayTime', function() {
+        let displayTimeEl;
+
+        beforeEach(function() {
+            picker.cachedEls.displayTime.innerHTML = '00:00';
+            displayTimeEl = picker.cachedEls.displayTime;
+        });
+
+        it('should replace hour time with value given when index 0', function() {
+            expect(displayTimeEl.innerHTML).to.equal('00:00');
+
+            picker.setDisplayTime('15', 0);
+
+            expect(displayTimeEl.innerHTML).to.equal('15:00');
+        });
+
+        it('should replace minute time with value given when index 1', function() {
+            expect(displayTimeEl.innerHTML).to.equal('00:00');
+
+            picker.setDisplayTime('15', 1);
+
+            expect(displayTimeEl.innerHTML).to.equal('00:15');
+        });
+
+        it('should pad minute value with 0 if value is single diget', function() {
+            expect(displayTimeEl.innerHTML).to.equal('00:00');
+
+            picker.setDisplayTime('1', 1);
+
+            expect(displayTimeEl.innerHTML).to.equal('00:01');
+        });
     });
 
     describe('#rotateHand', function() {
