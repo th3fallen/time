@@ -20,18 +20,18 @@ describe('TimePicker Unit Tests', function() {
             isTemplateInDOMStub.onFirstCall().returns(false);
             picker.setupTemplate();
 
-            expect(isTemplateInDOMStub.calledOnce).to.equal(true);
-            expect(isTemplateInDOMStub.calledBefore(insertAdjacentHTMLStub)).to.equal(true);
-            expect(insertAdjacentHTMLStub.calledWith('beforeend', picker.template)).to.equal(true);
+            expect(isTemplateInDOMStub.calledOnce).to.be.true;
+            expect(isTemplateInDOMStub.calledBefore(insertAdjacentHTMLStub)).to.be.true;
+            expect(insertAdjacentHTMLStub.calledWith('beforeend', picker.template)).to.be.true;
         });
 
         it('should not insert template in DOM if #isTemplateInDOM returns true', function() {
             isTemplateInDOMStub.onFirstCall().returns(true);
             picker.setupTemplate();
 
-            expect(isTemplateInDOMStub.calledOnce).to.equal(true);
-            expect(isTemplateInDOMStub.calledBefore(insertAdjacentHTMLStub)).to.equal(true);
-            expect(insertAdjacentHTMLStub.neverCalledWith('beforeend', picker.template)).to.equal(true);
+            expect(isTemplateInDOMStub.calledOnce).to.be.true;
+            expect(isTemplateInDOMStub.calledBefore(insertAdjacentHTMLStub)).to.be.true;
+            expect(insertAdjacentHTMLStub.neverCalledWith('beforeend', picker.template)).to.be.true;
         });
     });
 
