@@ -27,7 +27,7 @@ describe('TimePicker Unit Tests', function() {
         picker.cachedEls.clockMilitaryHours = ulNode.cloneNode();
 
         for (let inc = 0; inc < 24; inc += 1) {
-            if (inc <= 2) {
+            if (inc <= 1) {
                 picker.cachedEls.meridiem.appendChild(spanNode.cloneNode());
             }
             if (inc <= 11) {
@@ -313,6 +313,29 @@ describe('TimePicker Unit Tests', function() {
             picker.show();
 
             expect(picker.cachedEls.overlay.style.display).to.equal('block');
+        });
+    });
+
+    describe('#showEvent', function() {
+        it('should assign event.target to inputEl call property', function() {
+            const event = {};
+
+            event.target = document.createElement('input');
+            event.target.mtpOptions = picker.defaultOptions;
+            picker.showEvent(event);
+
+            expect(picker.inputEl).to.equal(event.target);
+        });
+
+        it('should call #show method', function() {
+            const showSpy = sinon.spy(picker, 'show');
+            const event = {};
+
+            event.target = document.createElement('input');
+            event.target.mtpOptions = picker.defaultOptions;
+            picker.showEvent(event);
+
+            expect(showSpy.calledOnce).to.be.true;
         });
     });
 });
