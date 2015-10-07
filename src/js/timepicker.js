@@ -321,7 +321,7 @@ class TimePicker {
      * @param {Element} activeEl Element to set active
      * @return {void}
      */
-    setActive(containerEl, activeEl) {
+    setActiveEl(containerEl, activeEl) {
         const activeClassName = 'mtp-clock--active';
         const currentActive = containerEl.getElementsByClassName(activeClassName)[0];
 
@@ -361,7 +361,7 @@ class TimePicker {
 
         const newActive = event.target;
 
-        this.setActive(containerEl, newActive);
+        this.setActiveEl(containerEl, newActive);
         this.setDisplayTime(newActive.innerHTML, displayIndex);
         this.rotateHand(this.getActiveIndex(listEls));
     }
