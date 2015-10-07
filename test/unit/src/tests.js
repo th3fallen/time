@@ -417,4 +417,47 @@ describe('TimePicker Unit Tests', function() {
             expect(hideSpy.calledOnce).to.be.false;
         });
     });
+
+    describe('#resetState', function() {
+    });
+
+    describe('#setDisplayTime', function() {
+
+    });
+
+    describe('#rotateHand', function() {
+
+    });
+
+    describe('#changeStep', function() {
+
+    });
+
+    describe('#toggleHoursVisible', function() {
+
+    });
+
+    describe('#toggleMinutesVisible', function() {
+
+    });
+
+    describe('#getActiveIndex', function() {
+
+    });
+
+    describe('#timeSelected', function() {
+
+    });
+
+    describe('#setActiveEl', function() {
+
+    });
+
+    describe('#meridiemSelectEvent', function() {
+
+    });
+
+    describe('#timeSelectEvent', function() {
+
+    });
 });
