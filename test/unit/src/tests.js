@@ -2,11 +2,56 @@
 import TimePicker from '../../../src/js/timepicker';
 
 describe('TimePicker Unit Tests', function() {  
+    let picker;
+
+    beforeEach(function() {
+        let spanNode = document.createElement('span');
+        let liNode = document.createElement('li');
+        let divNode = document.createElement('div');
+        let ulNode = document.createElement('ul');
+        let buttonNode = document.createElement('button');
+
+        picker = new TimePicker();
+        picker.cachedEls = {};
+        picker.cachedEls.overlay = divNode.cloneNode();
+        picker.cachedEls.wrapper = divNode.cloneNode();
+        picker.cachedEls.picker = divNode.cloneNode();
+        picker.cachedEls.meridiem = divNode.cloneNode();
+        picker.cachedEls.displayTime = spanNode.cloneNode();
+        picker.cachedEls.displayMeridiem = divNode.cloneNode();
+        picker.cachedEls.buttonCancel = buttonNode.cloneNode();
+        picker.cachedEls.buttonBack = buttonNode.cloneNode();
+        picker.cachedEls.buttonOk = buttonNode.cloneNode();
+        picker.cachedEls.clockHours = ulNode.cloneNode();
+        picker.cachedEls.clockMinutes = ulNode.cloneNode();
+        picker.cachedEls.clockMilitaryHours = ulNode.cloneNode();
+
+        for (let inc = 0; inc < 24; inc += 1) {
+            if (inc <= 2) {
+                picker.cachedEls.meridiem.appendChild(spanNode.cloneNode());
+            }
+            if (inc <= 11) {
+                picker.cachedEls.clockHours.appendChild(liNode.cloneNode());
+                picker.cachedEls.clockMinutes.appendChild(liNode.cloneNode());
+            }
+
+            picker.cachedEls.clockMilitaryHours.appendChild(liNode.cloneNode());
+        }
+
+        picker.cachedEls.meridiemSpans = picker.cachedEls.meridiem.childNodes;
+        picker.cachedEls.clockHoursLi = picker.cachedEls.clockHours.childNodes;
+        picker.cachedEls.clockMinutesLi = picker.cachedEls.clockMinutes.childNodes;
+        picker.cachedEls.clockMilitaryHoursLi = picker.cachedEls.clockMilitaryHours.childNodes;
+    });
+
+    afterEach(function() {
+        picker = null;
+    });
+
     describe('#setupTemplate', function() {
-        let picker, isTemplateInDOMStub, insertAdjacentHTMLStub;
+        let isTemplateInDOMStub, insertAdjacentHTMLStub;
 
         beforeEach(function() {
-            picker = new TimePicker();
             isTemplateInDOMStub = sinon.stub(picker, 'isTemplateInDOM');
             insertAdjacentHTMLStub = sinon.spy(document.body, 'insertAdjacentHTML');
         });
@@ -36,11 +81,10 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#setEvents', function() {
-        let picker, hasSetEventsStub, cachedEls, wrapperClassListAddSpy;
+        let hasSetEventsStub, cachedEls, wrapperClassListAddSpy;
         const addEventListenerSpys = {};
 
         beforeEach(function() {
-            picker = new TimePicker();
             cachedEls = picker.cachedEls;
             hasSetEventsStub = sinon.stub(picker, 'hasSetEvents');
             wrapperClassListAddSpy = sinon.spy(cachedEls.wrapper.classList, 'add');
@@ -165,6 +209,110 @@ describe('TimePicker Unit Tests', function() {
             expect(hasSetEventsStub.calledOnce).to.be.true;
             expect(hasSetEventsStub.calledBefore(wrapperClassListAddSpy)).to.be.true;
             expect(wrapperClassListAddSpy.neverCalledWith('mtp-events-set')).to.be.true;
+        });
+    });
+
+    describe('#show', function() {
+        let blurSpy, isMilitaryFormatStub, toggleHoursVisibleSpy, toggleMinutesVisibleSpy,
+        setDisplayTimeSpy;
+
+        beforeEach(function() {
+            picker.inputEl = document.createElement('input');
+            blurSpy = sinon.spy(picker.inputEl, 'blur');
+            isMilitaryFormatStub = sinon.stub(picker, 'isMilitaryFormat');
+            toggleHoursVisibleSpy = sinon.spy(picker, 'toggleHoursVisible');
+            toggleMinutesVisibleSpy = sinon.spy(picker, 'toggleMinutesVisible');
+            setDisplayTimeSpy = sinon.spy(picker, 'setDisplayTime');
+        });
+
+        afterEach(function() {
+            blurSpy.restore();
+            isMilitaryFormatStub.restore();
+            toggleHoursVisibleSpy.restore();
+            toggleMinutesVisibleSpy.restore();
+            setDisplayTimeSpy.restore();
+        });
+
+        it('should call blur on inputEl', function() {
+            picker.show();
+
+            expect(blurSpy.calledOnce).to.be.true;
+        });
+
+        it('should call #toggleHoursVisible with true', function() {
+            picker.show();
+
+            expect(toggleHoursVisibleSpy.calledOnce).to.be.true;
+            expect(toggleHoursVisibleSpy.calledWith(true)).to.be.true;
+        });
+
+        it('should call #toggleMinutesVisible with no parameters', function() {
+            picker.show();
+
+            expect(toggleMinutesVisibleSpy.calledOnce).to.be.true;
+            expect(toggleMinutesVisibleSpy.neverCalledWith(true)).to.be.true;
+        });
+
+        it('should call #setDisplayTime with 00 if isMilitaryFormat is true', function() {
+            isMilitaryFormatStub.onFirstCall().returns(true);
+            picker.show();
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(isMilitaryFormatStub.calledBefore(setDisplayTimeSpy)).to.be.true;
+            expect(setDisplayTimeSpy.calledWith('00', 0)).to.be.true;
+        });
+
+        it('should call #setDisplayTime, index 0, with 12 if isMilitaryFormat is false', function() {
+            isMilitaryFormatStub.onFirstCall().returns(false);
+            picker.show();
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(isMilitaryFormatStub.calledBefore(setDisplayTimeSpy)).to.be.true;
+            expect(setDisplayTimeSpy.getCall(0).calledWith('12', 0)).to.be.true;
+        });
+
+        it('should call #setDisplayTime, index 1, with 0', function() {
+            picker.show();
+
+            expect(setDisplayTimeSpy.getCall(1).calledWith('0', 1)).to.be.true;
+        });
+
+        it('should set cachedEls.displayMeridiem.style.display to none when isMilitaryFormat is true', function() {
+            isMilitaryFormatStub.onFirstCall().returns(true);
+            picker.show();
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(picker.cachedEls.displayMeridiem.style.display).to.equal('none');
+        });
+
+        it('should set cachedEls.displayMeridiem.style.display to inline when isMilitaryFormat is false', function() {
+            isMilitaryFormatStub.onFirstCall().returns(false);
+            picker.show();
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(picker.cachedEls.displayMeridiem.style.display).to.equal('inline');
+        });
+
+        it('should set cachedEls.meridiem.style.display to none when isMilitaryFormat is true', function() {
+            isMilitaryFormatStub.onFirstCall().returns(true);
+            picker.show();
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(picker.cachedEls.meridiem.style.display).to.equal('none');
+        });
+
+        it('should set cachedEls.meridiem.style.display to block when isMilitaryFormat is false', function() {
+            isMilitaryFormatStub.onFirstCall().returns(false);
+            picker.show();
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(picker.cachedEls.meridiem.style.display).to.equal('block');
+        });
+
+        it('should set cachedEls.overlay.style.display to block', function() {
+            picker.show();
+
+            expect(picker.cachedEls.overlay.style.display).to.equal('block');
         });
     });
 });
