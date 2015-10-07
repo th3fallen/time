@@ -40,17 +40,6 @@ class TimePicker {
     }
 
     /**
-     * Setup the template in DOM if not already
-     *
-     * @return {void}
-     */
-    setupTemplate() {
-        if (!this.isTemplateInDOM()) {
-            document.body.insertAdjacentHTML('beforeend', template);
-        }
-    }
-
-    /**
      * Bind event to the input element to open when `focus` event is triggered
      *
      * @param {string|HTMLElement} inputEl Selector element to be queried or existing HTMLElement
@@ -75,6 +64,17 @@ class TimePicker {
         this.inputEl = inputEl instanceof HTMLElement ? inputEl : document.querySelector(inputEl);
         this.inputEl.mtpOptions = assign({}, this.defaultOptions, options);
         this.show();
+    }
+
+    /**
+     * Setup the template in DOM if not already
+     *
+     * @return {void}
+     */
+    setupTemplate() {
+        if (!this.isTemplateInDOM()) {
+            document.body.insertAdjacentHTML('beforeend', template);
+        }
     }
 
     /**
@@ -113,6 +113,7 @@ class TimePicker {
                     this.timeSelectEvent(event, this.cachedEls.clockMilitaryHours, this.cachedEls.clockMilitaryHoursLi, 0);
                 });
             });
+
             this.cachedEls.wrapper.classList.add('mtp-events-set');
         }
     }
