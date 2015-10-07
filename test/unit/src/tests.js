@@ -338,4 +338,38 @@ describe('TimePicker Unit Tests', function() {
             expect(showSpy.calledOnce).to.be.true;
         });
     });
+
+    describe('#hide', function() {
+        beforeEach(function() {
+            picker.inputEl = document.createElement('input');
+            picker.inputEl.mtpOptions = picker.defaultOptions;
+        });
+
+        it('should set cachedEls.overlay.style.display to none', function() {
+            picker.hide();
+
+            expect(picker.cachedEls.overlay.style.display).to.equal('none');
+        });
+
+        it('should call dispatchEvevnt with blur event on inputEl', function() {
+            const dispatchEventSpy = sinon.spy(picker.inputEl, 'dispatchEvent');    
+            
+            picker.hide();
+
+            expect(dispatchEventSpy.calledOnce).to.be.true;
+            expect(dispatchEventSpy.calledWith(sinon.match(new Event('blur')))).to.be.true;
+
+            dispatchEventSpy.restore();
+        });
+
+        it('should call #resetState class method', function() {
+            const resetStateSpy = sinon.spy(picker, 'resetState');
+
+            picker.hide();
+
+            expect(resetStateSpy.calledOnce).to.be.true;
+
+            resetStateSpy.restore();
+        });
+    });
 });
