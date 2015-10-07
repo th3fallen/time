@@ -372,4 +372,49 @@ describe('TimePicker Unit Tests', function() {
             resetStateSpy.restore();
         });
     });
+
+    describe('#hideEvent', function() {
+        let event, hideSpy, stopPropagationSpy;
+
+        beforeEach(function() {
+            event = {};
+            event.stopPropagation = function() {};
+            event.target = document.createElement('input');
+            picker.inputEl = event.target;
+            picker.inputEl.mtpOptions = picker.defaultOptions;
+            hideSpy = sinon.spy(picker, 'hide');
+            stopPropagationSpy = sinon.spy(event, 'stopPropagation');
+        });
+
+        afterEach(function() {
+            hideSpy.restore();
+            stopPropagationSpy.restore();
+        });
+
+        it('should call stopPropagation on event paramater', function() {
+            picker.hideEvent(event);
+
+            expect(stopPropagationSpy.calledOnce).to.be.true;
+        });
+
+        it('should call #hide if event.target.classList contains mtp-overlay', function() {
+            event.target.classList.add('mtp-overlay');
+            picker.hideEvent(event);
+
+            expect(hideSpy.calledOnce).to.be.true;
+        });
+
+        it('should call #hide if event.target.classList contains mtp-actions__cancel', function() {
+            event.target.classList.add('mtp-actions__cancel');
+            picker.hideEvent(event);
+
+            expect(hideSpy.calledOnce).to.be.true;
+        });
+
+        it('should not call #hide if event.target.classList does not have allowed class', function() {
+            picker.hideEvent(event);
+
+            expect(hideSpy.calledOnce).to.be.false;
+        });
+    });
 });
