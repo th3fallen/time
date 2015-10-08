@@ -358,7 +358,7 @@ describe('TimePicker Unit Tests', function() {
             picker.hide();
 
             expect(dispatchEventSpy.calledOnce).to.be.true;
-            expect(dispatchEventSpy.calledWith(sinon.match(new Event('blur')))).to.be.true;
+            expect(dispatchEventSpy.args[0][0].type).to.equal('blur');
 
             dispatchEventSpy.restore();
         });
@@ -479,21 +479,21 @@ describe('TimePicker Unit Tests', function() {
             picker.resetState();
 
             expect(hoursLiDispatchEventSpy.calledOnce).to.be.true;
-            expect(hoursLiDispatchEventSpy.calledWith(sinon.match(new Event('click')))).to.be.true;
+            expect(hoursLiDispatchEventSpy.args[0][0].type).to.equal('click');
         });
 
         it('should call dispatchEvent with click event on cachedEls.clockMinutesLi[9]', function() {
             picker.resetState();
 
             expect(minutesLiDispatchEventSpy.calledOnce).to.be.true;
-            expect(minutesLiDispatchEventSpy.calledWith(sinon.match(new Event('click')))).to.be.true;
+            expect(minutesLiDispatchEventSpy.args[0][0].type).to.equal('click');
         });
 
         it('should call dispatchEvent with click event on cachedEls.clockMilitaryHoursLi[9]', function() {
             picker.resetState();
 
             expect(militaryHoursLiDispatchEventSpy.calledOnce).to.be.true;
-            expect(militaryHoursLiDispatchEventSpy.calledWith(sinon.match(new Event('click')))).to.be.true;
+            expect(militaryHoursLiDispatchEventSpy.args[0][0].type).to.equal('click');
         });
     });
 
