@@ -553,11 +553,87 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#toggleHoursVisible', function() {
+        let clockHours, clockMilitaryHours;
 
+        beforeEach(function() {
+            clockHours = picker.cachedEls.clockHours;
+            clockMilitaryHours = picker.cachedEls.clockMilitaryHours;
+        });
+
+        it(`should set cachedEls.clockHours.style.display to none when
+           isVisible is false`, function() {
+            picker.toggleHoursVisible(false);
+
+            expect(clockHours.style.display).to.equal('none');
+        });
+
+        it(`should set cachedEls.clockHours.style.display to none when
+           isVisible is true and isMilitaryFormat is true`, function() {
+            picker.toggleHoursVisible(true, true);
+
+            expect(clockHours.style.display).to.equal('none');
+        });
+
+        it(`should set cachedEls.clockHours.style.display to block when
+           isVisible is true and isMilitaryFormat is false`, function() {
+            picker.toggleHoursVisible(true, false);
+
+            expect(clockHours.style.display).to.equal('block');
+        });
+
+        it(`should set cachedEls.clockMilitaryHours.style.display to none when
+           isVisible is true and isMilitaryFormat is false`, function() {
+            picker.toggleHoursVisible(true, false);
+
+            expect(clockMilitaryHours.style.display).to.equal('none');
+        });
+
+        it(`should set cachedEls.clockMilitaryHours.style.display to none when
+           isVisible is false`, function() {
+            picker.toggleHoursVisible(false);
+
+            expect(clockMilitaryHours.style.display).to.equal('none');
+        });
+
+        it(`should set cachedEls.clockMilitaryHours.style.display to block when
+           isVisible is true and isMilitaryFormat is true`, function() {
+            picker.toggleHoursVisible(true, true);
+
+            expect(clockMilitaryHours.style.display).to.equal('block');
+        });
     });
 
     describe('#toggleMinutesVisible', function() {
+        let clockMinutes, buttonBack;
 
+        beforeEach(function() {
+            clockMinutes = picker.cachedEls.clockMinutes;
+            buttonBack = picker.cachedEls.buttonBack;
+        });
+
+        it('should set cachedEls.clockMinutes.style.display to block when isVisible is true', function() {
+            picker.toggleMinutesVisible(true);
+
+            expect(clockMinutes.style.display).to.equal('block');
+        });
+
+        it('should set cachedEls.clockMinutes.style.display to none when isVisible is false', function() {
+            picker.toggleMinutesVisible(false);
+
+            expect(clockMinutes.style.display).to.equal('none');
+        });
+
+        it('should set cachedEls.buttonBack.style.display to inline-block when isVisible is true', function() {
+            picker.toggleMinutesVisible(true);
+
+            expect(buttonBack.style.display).to.equal('inline-block');
+        });
+
+        it('should set cachedEls.buttonBack.style.display to none when isVisible is false', function() {
+            picker.toggleMinutesVisible(false);
+
+            expect(buttonBack.style.display).to.equal('none');
+        });
     });
 
     describe('#getActiveIndex', function() {
