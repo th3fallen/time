@@ -1,8 +1,0 @@
-engines:
-    eslint:
-        enabled: true
-exclude_paths:
-- "gulpfile.js"
-- "dist/**/*"
-- "src/sass/**/*"
-- "src/html/**/*"
