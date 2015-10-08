@@ -550,6 +550,98 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#changeStep', function() {
+        let isMilitaryFormatStub, toggleHoursVisibleSpy, toggleMinutesVisibleSpy,
+        getActiveIndexStub, rotateHandSpy, timeSelectedStub, hideSpy;
+
+        beforeEach(function() {
+            isMilitaryFormatStub = sinon.stub(picker, 'isMilitaryFormat');
+            toggleHoursVisibleSpy = sinon.spy(picker, 'toggleHoursVisible');
+            toggleMinutesVisibleSpy = sinon.spy(picker, 'toggleMinutesVisible');
+            getActiveIndexStub = sinon.stub(picker, 'getActiveIndex');
+            rotateHandSpy = sinon.spy(picker, 'rotateHand');
+            timeSelectedStub = sinon.stub(picker, 'timeSelected', function() {});
+            hideSpy = sinon.spy(picker, 'hide');
+            picker.inputEl = document.createElement('input');
+        });
+
+        afterEach(function() {
+            isMilitaryFormatStub.restore();
+            toggleHoursVisibleSpy.restore();
+            toggleMinutesVisibleSpy.restore();
+            getActiveIndexStub.restore();
+            rotateHandSpy.restore();
+            timeSelectedStub.restore();
+            hideSpy.restore();
+        });
+
+        it('should call #toggleHoursVisible(true) when step parameter is 0', function() {
+            isMilitaryFormatStub.onFirstCall().returns(false);
+            getActiveIndexStub.onFirstCall().returns(1);
+
+            picker.changeStep(0);
+
+            expect(toggleHoursVisibleSpy.calledOnce).to.be.true;
+            expect(toggleHoursVisibleSpy.calledWith(true, false)).to.be.true;
+        });
+
+        it(`should call #getActiveIndex of cachedEls.clockHoursLi
+           when isMilitaryFormat is false when step is parameter 0`, function() {
+            isMilitaryFormatStub.onFirstCall().returns(false);
+            getActiveIndexStub.onFirstCall().returns(1);
+
+            picker.changeStep(0);
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(getActiveIndexStub.calledOnce).to.be.true;
+            expect(getActiveIndexStub.calledWith(picker.cachedEls.clockHoursLi)).to.be.true;
+            expect(rotateHandSpy.calledOnce).to.be.true;
+            expect(rotateHandSpy.calledWith(1)).to.be.true;
+        });
+
+        it(`should call #getActiveIndex with cachedEls.clockMilitaryHoursLi
+           when isMilitaryFormat is true when step is parameter 0`, function() {
+            isMilitaryFormatStub.onFirstCall().returns(true);
+            getActiveIndexStub.onFirstCall().returns(1);
+
+            picker.changeStep(0);
+
+            expect(isMilitaryFormatStub.calledOnce).to.be.true;
+            expect(getActiveIndexStub.calledOnce).to.be.true;
+            expect(getActiveIndexStub.calledWith(picker.cachedEls.clockMilitaryHoursLi)).to.be.true;
+            expect(rotateHandSpy.calledOnce).to.be.true;
+            expect(rotateHandSpy.calledWith(1)).to.be.true;
+        });
+
+        it('should call #toggleMinutesVisible(true) when step parameter is 1', function() {
+            getActiveIndexStub.onFirstCall().returns(1);
+
+            picker.changeStep(1);
+
+            expect(toggleMinutesVisibleSpy.calledOnce).to.be.true;
+            expect(toggleMinutesVisibleSpy.calledWith(true)).to.be.true;
+        });
+
+        it('should call #getActiveIndex with cachedEls.clockMinutesLi when step parameter is 1', function() {
+            getActiveIndexStub.onFirstCall().returns(1);
+
+            picker.changeStep(1);
+
+            expect(getActiveIndexStub.calledOnce).to.be.true;
+            expect(getActiveIndexStub.calledWith(picker.cachedEls.clockMinutesLi)).to.be.true;
+        });
+
+        it('should call #timeSelected and #hide when step parameter is 2', function() {
+            picker.changeStep(2);
+
+            expect(timeSelectedStub.calledOnce).to.be.true;
+            expect(hideSpy.calledOnce).to.be.true;
+        });
+
+        it('should set currentStep to the step paramater passed', function() {
+            expect(picker.currentStep).to.equal(0);
+            picker.changeStep(1);
+            expect(picker.currentStep).to.equal(1);
+        });
     });
 
     describe('#toggleHoursVisible', function() {
