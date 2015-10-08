@@ -81,6 +81,8 @@ gulp.task('lint', function() {
         .pipe(eslint.format());
 });
 
+gulp.task('default', ['lint', 'test:unit', 'test:behavior', 'js']);
+
 gulp.task('watch', function() {
     gulp.watch('./src/sass/**/*.scss', ['sass']);
     gulp.watch(['./src/js/**/*.js', './src/html/**/*.html'], ['js']);
