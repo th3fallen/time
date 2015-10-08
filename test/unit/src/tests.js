@@ -25,6 +25,7 @@ describe('TimePicker Unit Tests', function() {
         picker.cachedEls.clockHours = ulNode.cloneNode();
         picker.cachedEls.clockMinutes = ulNode.cloneNode();
         picker.cachedEls.clockMilitaryHours = ulNode.cloneNode();
+        picker.cachedEls.clockHand = divNode.cloneNode();
 
         for (let inc = 0; inc < 24; inc += 1) {
             if (inc <= 1) {
@@ -530,11 +531,25 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#rotateHand', function() {
+        it('should set cachedEls.clockHand.style.transform to rotate((nodeIndex * 30 - 90)deg)', function() {
+            const nodeIndex = 5;
+            const rotateVal = 5 * 30 - 90;
 
+            picker.rotateHand(nodeIndex);
+
+            expect(picker.cachedEls.clockHand.style.transform).to.equal(`rotate(${rotateVal}deg)`);
+        });
+
+        it('should have a default value of 9 for nodeIndex', function() {
+            const rotateVal = 9 * 30 - 90;
+
+            picker.rotateHand();
+
+            expect(picker.cachedEls.clockHand.style.transform).to.equal(`rotate(${rotateVal}deg)`);
+        });
     });
 
     describe('#changeStep', function() {
-
     });
 
     describe('#toggleHoursVisible', function() {
