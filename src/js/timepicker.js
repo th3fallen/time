@@ -309,8 +309,9 @@ class TimePicker {
     timeSelected() {
         const time = this.cachedEls.displayTime.innerHTML;
         const meridiem = this.isMilitaryFormat() ? '' : this.cachedEls.displayMeridiem.innerHTML;
+        const timeValue = `${time} ${meridiem}`;
 
-        this.inputEl.value = `${time} ${meridiem}`;
+        this.inputEl.value = timeValue.trim();
         this.inputEl.dispatchEvent(new Event('input'));
     }
 
@@ -336,13 +337,14 @@ class TimePicker {
      * @return {void}
      */
     meridiemSelectEvent(event) {
+        const activeClassName = 'mtp-clock--active';
         const element = event.target;
-        const currentActive = this.cachedEls.meridiem.getElementsByClassName('mtp-clock--active')[0];
+        const currentActive = this.cachedEls.meridiem.getElementsByClassName(activeClassName)[0];
         const value = element.innerHTML;
 
-        if (element !== currentActive) {
-            currentActive.classList.remove('mtp-clock--active');
-            element.classList.add('mtp-clock--active');
+        if (!currentActive.isEqualNode(element)) {
+            currentActive.classList.remove(activeClassName);
+            element.classList.add(activeClassName);
             this.cachedEls.displayMeridiem.innerHTML = value;
         }
     }
