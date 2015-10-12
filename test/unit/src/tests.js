@@ -789,7 +789,32 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#setActiveEl', function() {
+        it('should remove class .mtp-clock--active from element in containerEl parameter', function() {
+            const clockHoursLi = picker.cachedEls.clockHoursLi;
+            const removeSpy = sinon.spy(clockHoursLi[2].classList, 'remove');
+            const activeEl = clockHoursLi[1];
 
+            clockHoursLi[2].classList.add('mtp-clock--active');
+            picker.setActiveEl(picker.cachedEls.clockHours, activeEl);
+
+            expect(removeSpy.calledOnce).to.be.true;
+            expect(removeSpy.calledWith('mtp-clock--active')).to.be.true;
+
+            removeSpy.restore();
+        })
+
+        it('should add class .mtp-clock--active to activeEl parameter', function () {
+            const activeEl = picker.cachedEls.clockHoursLi[1];
+            const addSpy = sinon.spy(activeEl.classList, 'add');
+
+            picker.cachedEls.clockHoursLi[2].classList.add('mtp-clock--active');
+            picker.setActiveEl(picker.cachedEls.clockHours, activeEl);
+
+            expect(addSpy.calledOnce).to.be.true;
+            expect(addSpy.calledWith('mtp-clock--active')).to.be.true;
+
+            addSpy.restore();
+        });
     });
 
     describe('#meridiemSelectEvent', function() {
