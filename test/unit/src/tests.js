@@ -818,7 +818,61 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#meridiemSelectEvent', function() {
+        it('should find child element in cachedEls.meridiem with class .mtp-clock--active and remove class', function() {
+            const meridiemSpans = picker.cachedEls.meridiemSpans;
+            const removeSpy = sinon.spy(meridiemSpans[0].classList, 'remove');
+            const event = {target: meridiemSpans[1]};
 
+            meridiemSpans[0].classList.add('mtp-clock--active');
+            picker.meridiemSelectEvent(event);
+
+            expect(removeSpy.calledOnce).to.be.true;
+            expect(removeSpy.calledWith('mtp-clock--active')).to.be.true;
+
+            removeSpy.restore();
+        });
+
+        it('should add class .mtp-clock--active to event.target element', function() {
+            const meridiemSpans = picker.cachedEls.meridiemSpans;
+            const addSpy = sinon.spy(meridiemSpans[1].classList, 'add');
+            const event = {target: meridiemSpans[1]};
+
+            meridiemSpans[0].classList.add('mtp-clock--active');
+            picker.meridiemSelectEvent(event);
+
+            expect(addSpy.calledOnce).to.be.true;
+            expect(addSpy.calledWith('mtp-clock--active')).to.be.true;
+
+            addSpy.restore();
+        });
+
+        it('should set cachedEls.displayMeridiem.innerHTML to event.target.innerHTML', function() {
+            const meridiemSpans = picker.cachedEls.meridiemSpans;
+            const event = {target: meridiemSpans[1]};
+
+            meridiemSpans[1].innerHTML = 'am';
+            meridiemSpans[0].classList.add('mtp-clock--active');
+            picker.meridiemSelectEvent(event);
+
+            expect(picker.cachedEls.displayMeridiem.innerHTML).to.equal('am');
+        });
+
+        it('should do nothing if current active elemtn is equal node of event.target', function() {
+            picker.cachedEls.meridiemSpans[0].classList.add('mtp-clock--active');
+
+            const activeElement = picker.cachedEls.meridiemSpans[0];
+            const event = {target: activeElement};
+            const addSpy = sinon.spy(activeElement.classList, 'add');
+            const removeSpy = sinon.spy(activeElement.classList, 'remove');
+
+            picker.meridiemSelectEvent(event);
+
+            expect(addSpy.calledOnce).to.be.false;
+            expect(removeSpy.calledOnce).to.be.false;
+
+            addSpy.restore();
+            removeSpy.restore();
+        });
     });
 
     describe('#timeSelectEvent', function() {
