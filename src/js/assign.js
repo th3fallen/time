@@ -6,13 +6,13 @@
  * @return {object} Target object with merged properties
  */
 function assign(target, ...sources) {
-    const to = Object(target);
-
     if (target === 'undefined' || target === null) {
         throw new TypeError('Cannot convert first argument to object');
     }
 
-    for (let inc = 1; inc < sources.length; inc += 1) {
+    const to = Object(target);
+
+    for (let inc = 0; inc < sources.length; inc += 1) {
         let nextSource = sources[inc];
 
         if (nextSource === 'undefined' || nextSource === null) {
@@ -20,6 +20,7 @@ function assign(target, ...sources) {
         }
 
         nextSource = Object(nextSource);
+
         const keysArray = Object.keys(nextSource);
 
         for (let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1) {
