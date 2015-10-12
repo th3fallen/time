@@ -729,7 +729,24 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#getActiveIndex', function() {
+        it('should return the index of element with .mtp-clock--active', function() {
+            const expectedIndex = 6;
+            const clockHoursLi = picker.cachedEls.clockHoursLi;
+            
+            clockHoursLi[expectedIndex].classList.add('mtp-clock--active');
+            
+            expect(picker.getActiveIndex(clockHoursLi)).to.equal(expectedIndex);
+        });
 
+        it('should subtract 12 from the element with class .mtp-clock--active if greater than 11', function() {
+            const activeIndex = 18;
+            const expectedIndex = 6;
+            const clockMilitaryHoursLi = picker.cachedEls.clockMilitaryHoursLi;
+            
+            clockMilitaryHoursLi[activeIndex].classList.add('mtp-clock--active');
+            
+            expect(picker.getActiveIndex(clockMilitaryHoursLi)).to.equal(expectedIndex);
+        });
     });
 
     describe('#timeSelected', function() {
