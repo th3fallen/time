@@ -1,5 +1,6 @@
 /* eslint-disable */
 import TimePicker from '../../../src/js/timepicker';
+import assign from '../../../src/js/assign';
 
 describe('TimePicker Unit Tests', function() {  
     let picker;
@@ -47,6 +48,57 @@ describe('TimePicker Unit Tests', function() {
 
     afterEach(function() {
         picker = null;
+    });
+
+    describe('#bindInput', function() {
+        it('should assign passed options merged with defaultOptions to inputEl parameter', function() {
+            const inputEl = document.createElement('input');
+            const options = {test: 'value'};
+            const expectOptions = assign({}, picker.defaultOptions, options);
+
+            picker.bindInput(inputEl, options);
+
+            expect(inputEl.mtpOptions).to.deep.equal(expectOptions);
+        });
+
+        it('should set focus event listener to inputEl parameter', function() {
+            const inputEl = document.createElement('input');
+            const addEventListenerSpy = sinon.spy(inputEl, 'addEventListener');
+
+            picker.bindInput(inputEl);
+
+            expect(addEventListenerSpy.calledOnce).to.be.true;
+            expect(addEventListenerSpy.calledWith('focus', sinon.match.func)).to.be.true;
+        });
+    });
+
+    describe('#openOnInput', function() {
+        it('should assign inputEl parameter to inputEl class property', function() {
+            const inputEl = document.createElement('input');
+
+            picker.openOnInput(inputEl);
+
+            expect(picker.inputEl).to.deep.equal(inputEl);
+        });
+
+        it('should assign passed options merged with defaultOptions to inputEl.mtpOptions property', function() {
+            const inputEl = document.createElement('input');
+            const options = {test: 'value'};
+            const expectOptions = assign({}, picker.defaultOptions, options);
+
+            picker.openOnInput(inputEl, options);
+
+            expect(picker.inputEl.mtpOptions).to.deep.equal(expectOptions);
+        });
+
+        it('should call #show method', function() {
+            const inputEl = document.createElement('input');
+            const showSpy = sinon.spy(picker, 'show');
+
+            picker.openOnInput(inputEl);
+
+            expect(showSpy.calledOnce).to.be.true;
+        });
     });
 
     describe('#setupTemplate', function() {
