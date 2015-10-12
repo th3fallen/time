@@ -750,7 +750,42 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#timeSelected', function() {
+        let isMilitaryFormatStub, dispatchEventSpy;
 
+        beforeEach(function() {
+            picker.inputEl = document.createElement('input');
+            picker.cachedEls.displayTime.innerHTML = '11:00';
+            picker.cachedEls.displayMeridiem.innerHTML = 'pm';
+            isMilitaryFormatStub = sinon.stub(picker, 'isMilitaryFormat');
+            dispatchEventSpy = sinon.spy(picker.inputEl, 'dispatchEvent');
+        });
+
+        afterEach(function() {
+            isMilitaryFormatStub.restore();
+            dispatchEventSpy.restore();
+        });
+
+        it(`should set displayTime.innerHTML and displayMeridiem.innerHTML to 
+           inputEl.value if isMilitaryFormat is true`, function() {
+            isMilitaryFormatStub.onCall(0).returns(false);
+
+            picker.timeSelected();
+            expect(picker.inputEl.value).to.equal('11:00 pm');
+        });
+        
+        it('should set displayTime.innerHTML to inputEl.value if isMilitaryFormat is true', function() {
+            isMilitaryFormatStub.onCall(0).returns(true);
+
+            picker.timeSelected();
+            expect(picker.inputEl.value).to.equal('11:00');
+        });
+
+        it('should call dispatch input event on inputEl', function() {
+            picker.timeSelected();
+
+            expect(dispatchEventSpy.calledOnce).to.be.true;
+            expect(dispatchEventSpy.args[0][0].type).to.equal('input');
+        });
     });
 
     describe('#setActiveEl', function() {
