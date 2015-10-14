@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     rename = require('gulp-rename'),
     eslint = require('gulp-eslint'),
-    mochaPhantomJS = require('gulp-mocha-phantomjs');
+    mochaPhantomJS = require('gulp-mocha-phantomjs'),
+    clean = require('gulp-clean');
 
 gulp.task('sass', function() {
     var stream = gulp.src('./src/sass/main.scss');
@@ -72,6 +73,19 @@ gulp.task('test:behavior', function() {
     });
 
     return bundle;
+});
+
+gulp.task('ghpages', function() {
+    gulp.src('./ghpages/scripts/*.css', {read: false}).pipe(clean());
+    gulp.src('./ghpages/stylesheets/*.js', {read: false}).pipe(clean());
+
+    gulp.src('./test/unit/build/tests.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./node_modules/mocha/mocha.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./node_modules/mocha/mocha.css').pipe(gulp.dest('./ghpages/stylesheets'));
+    gulp.src('./node_modules/chai/chai.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./node_modules/sinon/pkg/sinon.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./dist/js/timepicker.js').pipe(gulp.dest('./ghpages/stylesheets'));
+    gulp.src('./dist/css/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
 });
 
 gulp.task('lint', function() {
