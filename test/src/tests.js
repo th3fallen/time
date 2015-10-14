@@ -1,6 +1,6 @@
 /* eslint-disable */
-import TimePicker from '../../../src/js/timepicker';
-import assign from '../../../src/js/assign';
+import TimePicker from '../../src/js/timepicker';
+import assign from '../../src/js/assign';
 
 describe('TimePicker Unit Tests', function() {  
     let picker;

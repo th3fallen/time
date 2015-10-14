@@ -2,8 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
-        <script src="../../node_modules/source-map-support/browser-source-map-support.js"></script>
+        <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
         <script  type="text/javascript">
             var userAgent = window.navigator.userAgent;
             var isPhantomJS = userAgent.search('PhantomJS') >= 0;
@@ -17,16 +16,14 @@
                     e.initEvent(type, dict.bubbles, dict.catchable);
                     return e;
                 }
-
-                sourceMapSupport.install();
             }
         </script>
     </head>
     <body>
         <div id="mocha"></div>
-        <script src="../../node_modules/chai/chai.js"></script>
-        <script src="../../node_modules/mocha/mocha.js"></script>
-        <script src="../../node_modules/sinon/pkg/sinon.js"></script>
+        <script src="../node_modules/chai/chai.js"></script>
+        <script src="../node_modules/mocha/mocha.js"></script>
+        <script src="../node_modules/sinon/pkg/sinon.js"></script>
         <script>
             mocha.setup('bdd');
             var assert = chai.assert;
