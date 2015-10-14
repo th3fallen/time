@@ -61,7 +61,7 @@ gulp.task('ghpages', () => {
     gulp.src('./dist/css/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
 });
 
-gulp.task('default', ['lint', 'test:unit', 'test:behavior', 'js']);
+gulp.task('default', ['lint', 'test', 'js']);
 
 gulp.task('watch', () => {
     gulp.watch('./src/sass/**/*.scss', ['sass']);
