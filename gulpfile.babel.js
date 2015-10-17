@@ -1,5 +1,5 @@
 import gulp from 'gulp';
-import clean from 'gulp-clean';
+import rimraf from 'gulp-rimraf';
 import * as tasks from 'gulp-modern-tasks';
 
 const sassOpts = {
@@ -28,9 +28,25 @@ gulp.task('test:js', () => tasks.testJS(jsOpts.testOpts));
 gulp.task('lint:js', () => tasks.lintJS('./src/js/*.js'));
 gulp.task('default', ['lint:js', 'test:js', 'compile:js']);
 
-gulp.task('dist', ['compile:sass', 'compile:js'], () => {
+gulp.task('dist:app', ['compile:sass', 'compile:js'], () => {
     gulp.src('./build/js/timepicker.js').pipe(gulp.dest('./dist'));
     gulp.src('./build/css/timepicker.css').pipe(gulp.dest('./dist'));
+});
+
+gulp.task('clean:ghpages', () => {
+    gulp.src('./ghpages/scripts/*', {read: false}).pipe(rimraf());
+    gulp.src('./ghpages/stylesheets/*', {read: false}).pipe(rimraf());
+});
+
+gulp.task('dist:ghpages', ['clean:ghpages'], () => {
+    gulp.src('./node_modules/mocha/mocha.css').pipe(gulp.dest('./ghpages/stylesheets'));
+    gulp.src('./dist/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
+
+    gulp.src('./node_modules/mocha/mocha.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./node_modules/chai/chai.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./node_modules/sinon/pkg/sinon.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./dist/timepicker.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./test/build/tests.js').pipe(gulp.dest('./ghpages/scripts'));
 });
 
 gulp.task('watch', () => {
@@ -39,17 +55,3 @@ gulp.task('watch', () => {
     tasks.testJS(jsOpts.testOpts);
     gulp.watch(sassOpts.watch, ['compile:sass']);
 });
-
-gulp.task('ghpages', () => {
-    gulp.src('./ghpages/scripts/*.js', {read: false}).pipe(clean());
-    gulp.src('./ghpages/stylesheets/*.css', {read: false}).pipe(clean());
-
-    gulp.src('./test/build/tests.js').pipe(gulp.dest('./ghpages/scripts'));
-    gulp.src('./node_modules/mocha/mocha.js').pipe(gulp.dest('./ghpages/scripts'));
-    gulp.src('./node_modules/mocha/mocha.css').pipe(gulp.dest('./ghpages/stylesheets'));
-    gulp.src('./node_modules/chai/chai.js').pipe(gulp.dest('./ghpages/scripts'));
-    gulp.src('./node_modules/sinon/pkg/sinon.js').pipe(gulp.dest('./ghpages/scripts'));
-    gulp.src('./dist/js/timepicker.js').pipe(gulp.dest('./ghpages/stylesheets'));
-    gulp.src('./dist/css/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
-});
-
