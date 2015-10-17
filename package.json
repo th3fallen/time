@@ -2,7 +2,7 @@
   "name": "material-timepicker",
   "version": "0.0.1",
   "description": "material design timepicker",
-  "main": "./dist/js/timepicker.js",
+  "main": "./dist/timepicker.js",
   "scripts": {
     "test": "gulp test:unit"
   },
