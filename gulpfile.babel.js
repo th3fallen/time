@@ -41,8 +41,8 @@ gulp.task('watch', () => {
 });
 
 gulp.task('ghpages', () => {
-    gulp.src('./ghpages/scripts/*.css', {read: false}).pipe(clean());
-    gulp.src('./ghpages/stylesheets/*.js', {read: false}).pipe(clean());
+    gulp.src('./ghpages/scripts/*.js', {read: false}).pipe(clean());
+    gulp.src('./ghpages/stylesheets/*.css', {read: false}).pipe(clean());
 
     gulp.src('./test/build/tests.js').pipe(gulp.dest('./ghpages/scripts'));
     gulp.src('./node_modules/mocha/mocha.js').pipe(gulp.dest('./ghpages/scripts'));
