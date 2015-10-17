@@ -1,52 +1,31 @@
 import gulp from 'gulp';
-import sass from 'gulp-sass';
-import postcss from 'gulp-postcss';
-import gutil from 'gulp-util';
 import clean from 'gulp-clean';
-import rename from 'gulp-rename';
-import eslint from 'gulp-eslint';
-import mochaPhantomJS from 'gulp-mocha-phantomjs';
-import source from 'vinyl-source-stream';
-import autoprefixer from 'autoprefixer';
-import browserify from 'browserify';
+import * as tasks from 'gulp-modern-tasks';
 
-gulp.task('sass', () => {
-    return gulp.src('./src/sass/main.scss')
-    .pipe(sass().on('error', sass.logError))
-    .pipe(postcss([autoprefixer({browsers: ['last 5 versions']})]))
-    .pipe(rename('timepicker.css'))
-    .pipe(gulp.dest('./dist/css'));
-});
+const sassOpts = {
+    source: './src/sass/main.scss',
+    outFile: 'timepicker.css',
+    outPath: './build/css',
+    watch: './src/sass/**/*.scss',
+};
 
-gulp.task('js', ['lint', 'test'], () => {
-    return browserify('./src/js/timepicker.js', {debug: true})
-    .bundle().on('error', gutil.log)
-    .pipe(source('timepicker.js'))
-    .pipe(gulp.dest('./dist/js'));
-});
+const jsOpts = {
+    entries: ['./src/js/timepicker.js'],
+    outFile: 'timepicker.js',
+    outPath: './build/js',
 
-gulp.task('test', () => {
-    return browserify('./test/src/tests.js')
-    .bundle().on('error', gutil.log)
-    .pipe(source('tests.js'))
-    .pipe(gulp.dest('./test/build'))
-    .on('end', () => {
-        gulp.src('./test/runner.html')
-        .pipe(mochaPhantomJS({reporter: 'dot'}))
-        /* eslint-disable */
-        .on('error', function(error) {
-            gutil.log(error);
-            this.end();
-        });
-        /* eslint-enable */
-    });
-});
+    testOpts: {
+        entries: ['./test/src/tests.js'],
+        outFile: 'tests.js',
+        outPath: './test/build',
+        runner: './test/runner.html',
+    },
+};
 
-gulp.task('lint', () => {
-    return gulp.src('./src/js/timepicker.js')
-    .pipe(eslint())
-    .pipe(eslint.format());
-});
+gulp.task('compile:sass', () => tasks.compileSASS(sassOpts));
+gulp.task('compile:js', () => tasks.compileJS(jsOpts));
+gulp.task('test:js', () => tasks.testJS(jsOpts.testOpts));
+gulp.task('lint:js', () => tasks.lintJS('./src/js/*.js'));
 
 gulp.task('ghpages', () => {
     gulp.src('./ghpages/scripts/*.css', {read: false}).pipe(clean());
@@ -61,10 +40,11 @@ gulp.task('ghpages', () => {
     gulp.src('./dist/css/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
 });
 
-gulp.task('default', ['lint', 'test', 'js']);
+gulp.task('default', ['lint:js', 'test:js', 'compile:js']);
 
 gulp.task('watch', () => {
-    gulp.watch('./src/sass/**/*.scss', ['sass']);
-    gulp.watch(['./src/js/**/*.js', './src/html/**/*.html'], ['js']);
-    gulp.watch('./test/src/**/*.js', ['test']);
+    global.watch = true;
+    tasks.compileJS(jsOpts);
+    tasks.testJS(jsOpts.testOpts);
+    gulp.watch(sassOpts.watch, ['compile:sass']);
 });
