@@ -2,6 +2,14 @@
 
 [![Build Status](https://travis-ci.org/hownowbrowncow/material-timepicker.svg)](https://travis-ci.org/hownowbrowncow/material-timepicker)
 
+## Install
+
+Available on NPM only currently  
+
+```
+npm install material-timepicker
+```
+
 ## About
 
 Currently the Material Design Lite project doesn't have any picker features implemented. There are a few other OS material picker libraries but they are either not actively maintained,  or require heavy dependencies.
