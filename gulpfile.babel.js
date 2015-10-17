@@ -26,6 +26,19 @@ gulp.task('compile:sass', () => tasks.compileSASS(sassOpts));
 gulp.task('compile:js', () => tasks.compileJS(jsOpts));
 gulp.task('test:js', () => tasks.testJS(jsOpts.testOpts));
 gulp.task('lint:js', () => tasks.lintJS('./src/js/*.js'));
+gulp.task('default', ['lint:js', 'test:js', 'compile:js']);
+
+gulp.task('dist', ['compile:sass', 'compile:js'], () => {
+    gulp.src('./build/js/timepicker.js').pipe(gulp.dest('./dist'));
+    gulp.src('./build/css/timepicker.css').pipe(gulp.dest('./dist'));
+});
+
+gulp.task('watch', () => {
+    global.watch = true;
+    tasks.compileJS(jsOpts);
+    tasks.testJS(jsOpts.testOpts);
+    gulp.watch(sassOpts.watch, ['compile:sass']);
+});
 
 gulp.task('ghpages', () => {
     gulp.src('./ghpages/scripts/*.css', {read: false}).pipe(clean());
@@ -40,11 +53,3 @@ gulp.task('ghpages', () => {
     gulp.src('./dist/css/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
 });
 
-gulp.task('default', ['lint:js', 'test:js', 'compile:js']);
-
-gulp.task('watch', () => {
-    global.watch = true;
-    tasks.compileJS(jsOpts);
-    tasks.testJS(jsOpts.testOpts);
-    gulp.watch(sassOpts.watch, ['compile:sass']);
-});
