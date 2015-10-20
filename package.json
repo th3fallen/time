@@ -1,10 +1,11 @@
 {
   "name": "material-timepicker",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "material design timepicker",
-  "main": "./dist/timepicker.js",
+  "main": "./dist/js/template.js",
   "scripts": {
-    "test": "gulp test:unit"
+    "test": "gulp test:unit",
+    "build": "cp ./build/css/timepicker.css ./dist/css && babel ./src --out-dir ./dist"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,7 @@
     "babel": "^5.8.23",
     "chai": "^3.3.0",
     "gulp": "^3.9.0",
-    "gulp-modern-tasks": "^0.1.2",
+    "gulp-modern-tasks": "^0.1.4",
     "gulp-rimraf": "^0.2.0",
     "mocha": "^2.3.3",
     "sinon": "^1.17.1"
