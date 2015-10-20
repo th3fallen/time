@@ -1,3 +1,4 @@
+const template = `
 <div class="mtp-overlay" style="display:none">
     <div class="mtp-wrapper">
         <div class="mtp-display">
@@ -79,3 +80,6 @@
         </div><!-- END .mtp-picker -->
     </div><!-- END .mtp-wrapper -->
 </div><!-- END .mtp-overlay -->
+`;
+
+export default template;

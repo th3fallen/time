@@ -1,4 +1,4 @@
-import template from '../html/timepicker.html';
+import template from './template';
 import assign from './assign';
 
 class TimePicker {
@@ -396,5 +396,4 @@ class TimePicker {
     }
 }
 
-window.TimePicker = TimePicker;
 export default TimePicker;
