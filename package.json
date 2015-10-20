@@ -1,8 +1,8 @@
 {
   "name": "material-timepicker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "material design timepicker",
-  "main": "./dist/js/template.js",
+  "main": "./dist/js/timepicker.js",
   "scripts": {
     "test": "gulp test:unit",
     "build": "cp ./build/css/timepicker.css ./dist/css && babel ./src --out-dir ./dist"
