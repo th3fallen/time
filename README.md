@@ -16,7 +16,7 @@ Currently the Material Design Lite project doesn't have any picker features impl
 
 In need of a timepicker for a current project I made this library. Built with plain JavaScript and no dependencies. Written in ES6 and SASS.
 
-The library currently supports both 12 and 24 time formats. Module loading is support but an object named `TimePicker` is also put into the window scope when the library is loaded.
+The library currently supports both 12 and 24 time formats.
 
 To check out live examples and view the test runner check out http://hownowbrowncow.github.io/material-timepicker/
 
