@@ -194,6 +194,7 @@ class TimePicker {
         this.cachedEls.clockHoursLi[9].dispatchEvent(new Event('click'));
         this.cachedEls.clockMinutesLi[9].dispatchEvent(new Event('click'));
         this.cachedEls.clockMilitaryHoursLi[9].dispatchEvent(new Event('click'));
+        this.cachedEls.meridiemSpans[0].dispatchEvent(new Event('click'));
     }
 
     /**

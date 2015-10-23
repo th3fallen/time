@@ -473,7 +473,7 @@ describe('TimePicker Unit Tests', function() {
 
     describe('#resetState', function() {
         let toggleHoursVisibleSpy, toggleMinutesVisibleSpy, isMilitaryFormatStub, hoursLiDispatchEventSpy,
-        minutesLiDispatchEventSpy, militaryHoursLiDispatchEventSpy;
+        minutesLiDispatchEventSpy, militaryHoursLiDispatchEventSpy, meridiemSpanDispatchEventSpy;
 
         beforeEach(function() {
             const cachedEls = picker.cachedEls;
@@ -487,6 +487,7 @@ describe('TimePicker Unit Tests', function() {
             hoursLiDispatchEventSpy = sinon.spy(cachedEls.clockHoursLi[9], 'dispatchEvent');
             minutesLiDispatchEventSpy = sinon.spy(cachedEls.clockMinutesLi[9], 'dispatchEvent');
             militaryHoursLiDispatchEventSpy = sinon.spy(cachedEls.clockMilitaryHoursLi[9], 'dispatchEvent');
+            meridiemSpanDispatchEventSpy = sinon.spy(cachedEls.meridiemSpans[0], 'dispatchEvent');
         });
 
         afterEach(function() {
@@ -496,6 +497,7 @@ describe('TimePicker Unit Tests', function() {
             hoursLiDispatchEventSpy.restore();
             minutesLiDispatchEventSpy.restore();
             militaryHoursLiDispatchEventSpy.restore();
+            meridiemSpanDispatchEventSpy.restore();
         });
 
         it('should set currentStep to 0', function() {
@@ -546,6 +548,13 @@ describe('TimePicker Unit Tests', function() {
 
             expect(militaryHoursLiDispatchEventSpy.calledOnce).to.be.true;
             expect(militaryHoursLiDispatchEventSpy.args[0][0].type).to.equal('click');
+        });
+
+        it('should call dispatchEvent with click event on cachedEls.meridiemSpans[0]', function() {
+            picker.resetState();
+
+            expect(meridiemSpanDispatchEventSpy.calledOnce).to.be.true;
+            expect(meridiemSpanDispatchEventSpy.args[0][0].type).to.equal('click');
         });
     });
 
