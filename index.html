@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Material TimePicker</title>
+        <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.indigo-pink.min.css">
+        <script src="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.min.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="./build/css/timepicker.css" type="text/css" media="all" />
+
+        <style type="text/css" media="screen">
+            .wrapper {
+                width: 500px;
+                margin: 50px auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="bind-one" />
+                <label class="mdl-textfield__label" for="bind-one">Bind Test One</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="bind-two" />
+                <label class="mdl-textfield__label" for="bind-two">Bind Test Two</label>
+            </div>
+        </div>
+
+        <script src="./build/js/timepicker.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+            TimePicker.bindInput('#bind-one');
+            TimePicker.bindInput('#bind-two', {timeFormat: 'military'});
+        </script>
+    </body>
+</html>
