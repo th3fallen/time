@@ -1,6 +1,6 @@
 {
   "name": "material-timepicker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "material design timepicker",
   "main": "./dist/js/timepicker.js",
   "scripts": {
