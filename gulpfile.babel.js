@@ -40,12 +40,12 @@ gulp.task('clean:ghpages', () => {
 
 gulp.task('dist:ghpages', ['clean:ghpages'], () => {
     gulp.src('./node_modules/mocha/mocha.css').pipe(gulp.dest('./ghpages/stylesheets'));
-    gulp.src('./dist/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
+    gulp.src('./build/css/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
 
     gulp.src('./node_modules/mocha/mocha.js').pipe(gulp.dest('./ghpages/scripts'));
     gulp.src('./node_modules/chai/chai.js').pipe(gulp.dest('./ghpages/scripts'));
     gulp.src('./node_modules/sinon/pkg/sinon.js').pipe(gulp.dest('./ghpages/scripts'));
-    gulp.src('./dist/timepicker.js').pipe(gulp.dest('./ghpages/scripts'));
+    gulp.src('./build/js/timepicker.js').pipe(gulp.dest('./ghpages/scripts'));
     gulp.src('./test/build/tests.js').pipe(gulp.dest('./ghpages/scripts'));
 });
 
