@@ -170,7 +170,8 @@ class TimePicker {
         event.stopPropagation();
 
         // only allow event based close if event.target contains one of these classes
-        // hack to prevent overlay close event from triggering on all elements
+        // hack to prevent overlay close event from triggering on all elements because
+        // they are children of overlay
         const allowedClasses = ['mtp-overlay', 'mtp-actions__cancel'];
         const classList = event.target.classList;
 
