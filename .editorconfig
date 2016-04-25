@@ -1,10 +1,18 @@
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
 [*]
-# Unix-style newlines
 end_of_line = lf
-# Insert newline at end of all files
 insert_final_newline = true
 
-[*.js]
+# 4 spaces for application code
+[*.{scss,js}]
 charset = utf-8
-indent-style = space
-indent-size = 4
+indent_style = space
+indent_size = 4
+
+# 2 spaces for json and config files
+[{package.json,.travis.yml}]
+indent_style = space
+indent_size = 2
