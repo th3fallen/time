@@ -10,6 +10,7 @@ const sassOpts = {
 };
 
 const jsOpts = {
+    watch: './src/js/**/*.js',
     entries: ['./src/js/timepicker.js'],
     outFile: 'timepicker.js',
     outPath: './build/js',
@@ -54,4 +55,5 @@ gulp.task('watch', () => {
     tasks.compileJS(jsOpts);
     tasks.testJS(jsOpts.testOpts);
     gulp.watch(sassOpts.watch, ['compile:sass']);
+    gulp.watch(jsOpts.watch, ['lint:js']);
 });
