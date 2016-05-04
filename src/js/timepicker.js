@@ -174,13 +174,11 @@ class TimePicker {
         // they are children of overlay
         const allowedClasses = ['mtp-overlay', 'mtp-actions__cancel'];
         const classList = event.target.classList;
+        const isAllowed = allowedClasses.some(allowedClass => classList.contains(allowedClass));
 
-        allowedClasses.some(allowedClass => {
-            if (classList.contains(allowedClass)) {
-                this.hide();
-                return true;
-            }
-        });
+        if (isAllowed) {
+            this.hide();
+        }
     }
 
     /**
@@ -293,10 +291,9 @@ class TimePicker {
     getActiveIndex(timeEls) {
         let activeIndex = 0;
 
-        [].some.call(timeEls, (timeEl, index) => {
+        [].forEach.call(timeEls, (timeEl, index) => {
             if (timeEl.classList.contains('mtp-clock--active')) {
                 activeIndex = index;
-                return true;
             }
         });
 
