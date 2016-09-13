@@ -1,44 +1,43 @@
 import gulp from 'gulp';
-import rimraf from 'gulp-rimraf';
+import runSequence from 'run-sequence';
+import del from 'del';
 import * as tasks from 'gulp-modern-tasks';
 
 const sassOpts = {
-    source: './src/sass/main.scss',
-    outFile: 'timepicker.css',
+    pathGlob: './src/sass/main.scss',
     outPath: './build/css',
     watch: './src/sass/**/*.scss',
 };
 
 const jsOpts = {
-    watch: './src/js/**/*.js',
-    entries: ['./src/js/timepicker.js'],
-    outFile: 'timepicker.js',
+    files: ['./src/js/timepicker.js'],
     outPath: './build/js',
+    lintPath: './src/js/**/*.js',
+};
 
-    testOpts: {
-        entries: ['./test/src/tests.js'],
-        outFile: 'tests.js',
-        outPath: './test/build',
-        runner: './test/runner.html',
-    },
+const testOpts = {
+    files: ['./test/src/tests.js'],
+    outPath: './test/build',
+    runner: './test/runner.html',
 };
 
 gulp.task('compile:sass', () => tasks.compileSASS(sassOpts));
-gulp.task('compile:js', () => tasks.compileJS(jsOpts));
-gulp.task('test:js', () => tasks.testJS(jsOpts.testOpts));
-gulp.task('lint:js', () => tasks.lintJS('./src/js/*.js'));
-gulp.task('default', ['lint:js', 'test:js', 'compile:js', 'compile:sass']);
+gulp.task('compile:js', ['lint:js', 'test:js'], () => tasks.compileJS(jsOpts));
+gulp.task('compile', ['compile:sass', 'compile:js']);
+
+gulp.task('test:js', () => tasks.testJS(testOpts));
+gulp.task('lint:js', () => tasks.lintJS(jsOpts.lintPath));
+
+gulp.task('clean:ghpages', () => del(['./ghpages/scripts/*', './ghpages/stylesheets/*']));
+gulp.task('clean:js', () => del(`${jsOpts.outPath}/*`));
+gulp.task('clean:sass', () => del(`${sassOpts.outPath}/*`));
+gulp.task('clean:test', () => del(`${testOpts.outPath}/*`));
+gulp.task('clean', ['clean:js', 'clean:sass', 'clean:test', 'clean:ghpages']);
 
 gulp.task('dist:app', ['compile:sass', 'compile:js'], () => {
     gulp.src('./build/js/timepicker.js').pipe(gulp.dest('./dist'));
     gulp.src('./build/css/timepicker.css').pipe(gulp.dest('./dist'));
 });
-
-gulp.task('clean:ghpages', () => {
-    gulp.src('./ghpages/scripts/*', {read: false}).pipe(rimraf());
-    gulp.src('./ghpages/stylesheets/*', {read: false}).pipe(rimraf());
-});
-
 gulp.task('dist:ghpages', ['clean:ghpages'], () => {
     gulp.src('./node_modules/mocha/mocha.css').pipe(gulp.dest('./ghpages/stylesheets'));
     gulp.src('./build/css/timepicker.css').pipe(gulp.dest('./ghpages/stylesheets'));
@@ -52,8 +51,11 @@ gulp.task('dist:ghpages', ['clean:ghpages'], () => {
 
 gulp.task('watch', () => {
     global.watch = true;
+
     tasks.compileJS(jsOpts);
-    tasks.testJS(jsOpts.testOpts);
     gulp.watch(sassOpts.watch, ['compile:sass']);
     gulp.watch(jsOpts.watch, ['lint:js']);
+    gulp.watch(jsOpts.watch, ['test:js']);
 });
+
+gulp.task('default', () => runSequence('clean', 'compile'));
