@@ -1,6 +1,6 @@
 # material-timepicker 
 
-![Build Status](https://strider.nickc.io/hownowbrowncow/material-timepicker/badge?branch=master)
+[![Build Status](https://strider.nickc.io/hownowbrowncow/material-timepicker/badge?branch=master)](https://strider.nickc.io/hownowbrowncow/material-timepicker)
 
 ## Install
 
