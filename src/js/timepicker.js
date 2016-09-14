@@ -387,7 +387,7 @@ class TimePicker {
         const displayTime = activeIndex > 44 ? activeIndex - 45 : activeIndex + 15;
 
         this.setDisplayTime(displayTime, 1);
-        this.rotateHand(this.getActiveIndex(listEls), 6);
+        this.rotateHand(activeIndex, 6);
     }
 
     /**

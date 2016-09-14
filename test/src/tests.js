@@ -28,16 +28,18 @@ describe('TimePicker Unit Tests', function() {
         picker.cachedEls.clockMilitaryHours = ulNode.cloneNode();
         picker.cachedEls.clockHand = divNode.cloneNode();
 
-        for (let inc = 0; inc < 24; inc += 1) {
+        for (let inc = 0; inc < 60; inc += 1) {
             if (inc <= 1) {
                 picker.cachedEls.meridiem.appendChild(spanNode.cloneNode());
             }
             if (inc <= 11) {
                 picker.cachedEls.clockHours.appendChild(liNode.cloneNode());
-                picker.cachedEls.clockMinutes.appendChild(liNode.cloneNode());
+            }
+            if (inc <= 23) {
+                picker.cachedEls.clockMilitaryHours.appendChild(liNode.cloneNode());
             }
 
-            picker.cachedEls.clockMilitaryHours.appendChild(liNode.cloneNode());
+            picker.cachedEls.clockMinutes.appendChild(liNode.cloneNode());
         }
 
         picker.cachedEls.meridiemSpans = picker.cachedEls.meridiem.childNodes;
@@ -485,7 +487,7 @@ describe('TimePicker Unit Tests', function() {
             toggleHoursVisibleSpy = sinon.spy(picker, 'toggleHoursVisible');
             toggleMinutesVisibleSpy = sinon.spy(picker, 'toggleMinutesVisible');
             hoursLiDispatchEventSpy = sinon.spy(cachedEls.clockHoursLi[9], 'dispatchEvent');
-            minutesLiDispatchEventSpy = sinon.spy(cachedEls.clockMinutesLi[9], 'dispatchEvent');
+            minutesLiDispatchEventSpy = sinon.spy(cachedEls.clockMinutesLi[45], 'dispatchEvent');
             militaryHoursLiDispatchEventSpy = sinon.spy(cachedEls.clockMilitaryHoursLi[9], 'dispatchEvent');
             meridiemSpanDispatchEventSpy = sinon.spy(cachedEls.meridiemSpans[0], 'dispatchEvent');
         });
@@ -798,16 +800,6 @@ describe('TimePicker Unit Tests', function() {
             
             expect(picker.getActiveIndex(clockHoursLi)).to.equal(expectedIndex);
         });
-
-        it('should subtract 12 from the element with class .mtp-clock--active if greater than 11', function() {
-            const activeIndex = 18;
-            const expectedIndex = 6;
-            const clockMilitaryHoursLi = picker.cachedEls.clockMilitaryHoursLi;
-            
-            clockMilitaryHoursLi[activeIndex].classList.add('mtp-clock--active');
-            
-            expect(picker.getActiveIndex(clockMilitaryHoursLi)).to.equal(expectedIndex);
-        });
     });
 
     describe('#timeSelected', function() {
@@ -936,14 +928,13 @@ describe('TimePicker Unit Tests', function() {
         });
     });
 
-    describe('#timeSelectEvent', function() {
+    describe('#hourSelectEvent', function() {
         let event, stopPropagationSpy, setActiveElSpy, setDisplayTimeSpy, rotateHandSpy,
-        getActiveIndexSpy, containerEl, listEls, displayIndex;
+        getActiveIndexSpy, containerEl, listEls;
 
         beforeEach(function() {
             containerEl = picker.cachedEls.clockHours;
             listEls = picker.cachedEls.clockHoursLi;
-            displayIndex = 0;
             event = {
                 innerHTML: 'value',
                 target: document.createElement('li'),
@@ -967,27 +958,87 @@ describe('TimePicker Unit Tests', function() {
         });
 
         it('should call stopPropagation on passed event parameter', function() {
-            picker.timeSelectEvent(event, containerEl, listEls, displayIndex);
+            picker.hourSelectEvent(event, containerEl, listEls);
 
             expect(stopPropagationSpy.calledOnce).to.be.true;
         });
 
         it('should call setActiveEl with containerEl and event.target parameters', function() {
-            picker.timeSelectEvent(event, containerEl, listEls, displayIndex);
+            picker.hourSelectEvent(event, containerEl, listEls);
 
             expect(setActiveElSpy.calledOnce).to.be.true;
             expect(setActiveElSpy.calledWith(containerEl, event.target)).to.be.true;
         });
 
-        it('should call setDisplayTime with event.target.innerHTML and displayIndex parameters', function() {
-            picker.timeSelectEvent(event, containerEl, listEls, displayIndex);
+        it('should call setDisplayTime with event.target.innerHTML and 0 as index parameter', function() {
+            picker.hourSelectEvent(event, containerEl, listEls);
 
             expect(setDisplayTimeSpy.calledOnce).to.be.true;
-            expect(setDisplayTimeSpy.calledWith(event.target.innerHTML, displayIndex)).to.be.true;
+            expect(setDisplayTimeSpy.calledWith(event.target.innerHTML, 0)).to.be.true;
         });
 
         it('should call rotateHand with the result of getActiveIndex', function() {
-            picker.timeSelectEvent(event, containerEl, listEls, displayIndex);
+            picker.hourSelectEvent(event, containerEl, listEls);
+
+            expect(getActiveIndexSpy.calledOnce).to.be.true;
+            expect(getActiveIndexSpy.calledWith(listEls)).to.be.true;
+            expect(getActiveIndexSpy.returnValues[0]).to.equal(0);
+            expect(rotateHandSpy.calledOnce).to.be.true;
+            expect(rotateHandSpy.calledWith(0)).to.be.true;
+        });
+    });
+
+    describe('#minuteSelectEvent', function() {
+        let event, stopPropagationSpy, setActiveElSpy, setDisplayTimeSpy, rotateHandSpy,
+        getActiveIndexSpy, containerEl, listEls;
+
+        beforeEach(function() {
+            containerEl = picker.cachedEls.clockHours;
+            listEls = picker.cachedEls.clockHoursLi;
+            event = {
+                innerHTML: 'value',
+                target: document.createElement('li'),
+                stopPropagation: function() {},
+            };
+
+            listEls[0].classList.add('mtp-clock--active');
+            stopPropagationSpy = sinon.spy(event, 'stopPropagation');
+            setActiveElSpy = sinon.spy(picker, 'setActiveEl');
+            setDisplayTimeSpy = sinon.spy(picker, 'setDisplayTime');
+            rotateHandSpy = sinon.spy(picker, 'rotateHand');
+            getActiveIndexSpy = sinon.spy(picker, 'getActiveIndex');
+        });
+
+        afterEach(function() {
+            stopPropagationSpy.restore();
+            setActiveElSpy.restore();
+            setDisplayTimeSpy.restore();
+            rotateHandSpy.restore();
+            getActiveIndexSpy.restore();
+        });
+
+        it('should call stopPropagation on passed event parameter', function() {
+            picker.minuteSelectEvent(event, containerEl, listEls);
+
+            expect(stopPropagationSpy.calledOnce).to.be.true;
+        });
+
+        it('should call setActiveEl with containerEl and event.target parameters', function() {
+            picker.minuteSelectEvent(event, containerEl, listEls);
+
+            expect(setActiveElSpy.calledOnce).to.be.true;
+            expect(setActiveElSpy.calledWith(containerEl, event.target)).to.be.true;
+        });
+
+        it('should call setDisplayTime with calcuated value and 1 as index parameter', function() {
+            picker.minuteSelectEvent(event, containerEl, listEls);
+
+            expect(setDisplayTimeSpy.calledOnce).to.be.true;
+            expect(setDisplayTimeSpy.calledWith(sinon.match.number, 1)).to.be.true;
+        });
+
+        it('should call rotateHand with the result of getActiveIndex', function() {
+            picker.minuteSelectEvent(event, containerEl, listEls);
 
             expect(getActiveIndexSpy.calledOnce).to.be.true;
             expect(getActiveIndexSpy.calledWith(listEls)).to.be.true;
