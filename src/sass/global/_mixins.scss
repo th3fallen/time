@@ -1,15 +1,47 @@
-@mixin clockNumbers($itemCount, $circleSize, $itemSize) {
+@mixin clockHours($circleSize, $itemSize) {
     > * {
         width: $itemSize;
         height: $itemSize;
         line-height: $itemSize;
 
-        $angle: (360 / $itemCount);
+        $angle: (360 / 12);
         $rot: 0;
 
-        @for $i from 1 through $itemCount {
+        @for $i from 1 through 12 {
             &:nth-of-type(#{$i}) {
-                transform: rotate(#{$rot}deg)  translate($circleSize / 2) rotate(-#{$rot}deg);
+                transform: rotate(#{$rot}deg) translate($circleSize / 2) rotate(-#{$rot}deg);
+            }
+
+            $rot: $rot + $angle;
+        }
+    }
+}
+@mixin clockMinutes($circleSize, $itemSize) {
+    > * {
+        $angle: (360 / 60);
+        $rot: 0;
+
+        @for $i from 1 through 60 {
+            @if $i == 1 or ($i - 1) % 5 == 0 {
+                &:nth-of-type(#{$i}) {
+                    transform: rotate(#{$rot}deg) translate($circleSize / 2) rotate(-#{$rot}deg);
+                    width: $itemSize;
+                    height: $itemSize;
+                    line-height: $itemSize;
+                    top: 125px;
+                    left: 125px;
+                }
+            } @else {
+                $tempRot: $rot;
+
+                &:nth-of-type(#{$i}) {
+                    transform: rotate(#{$tempRot}deg) translate($circleSize / 2) rotate(-#{$tempRot}deg);
+                    width: 15px;
+                    height: 15px;
+                    line-height: 15px;
+                    top: 130px;
+                    left: 130px;
+                }
             }
 
             $rot: $rot + $angle;
