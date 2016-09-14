@@ -100,17 +100,17 @@ class TimePicker {
             // time select events
             [].forEach.call(this.cachedEls.clockHoursLi, hour => {
                 hour.addEventListener('click', event => {
-                    this.timeSelectEvent(event, this.cachedEls.clockHours, this.cachedEls.clockHoursLi, 0);
-                });
-            });
-            [].forEach.call(this.cachedEls.clockMinutesLi, minute => {
-                minute.addEventListener('click', event => {
-                    this.timeSelectEvent(event, this.cachedEls.clockMinutes, this.cachedEls.clockMinutesLi, 1);
+                    this.hourSelectEvent(event, this.cachedEls.clockHours, this.cachedEls.clockHoursLi);
                 });
             });
             [].forEach.call(this.cachedEls.clockMilitaryHoursLi, hour => {
                 hour.addEventListener('click', event => {
-                    this.timeSelectEvent(event, this.cachedEls.clockMilitaryHours, this.cachedEls.clockMilitaryHoursLi, 0);
+                    this.hourSelectEvent(event, this.cachedEls.clockMilitaryHours, this.cachedEls.clockMilitaryHoursLi);
+                });
+            });
+            [].forEach.call(this.cachedEls.clockMinutesLi, minute => {
+                minute.addEventListener('click', event => {
+                    this.minuteSelectEvent(event, this.cachedEls.clockMinutes, this.cachedEls.clockMinutesLi);
                 });
             });
 
@@ -191,7 +191,7 @@ class TimePicker {
         this.toggleHoursVisible(true, this.isMilitaryFormat());
         this.toggleMinutesVisible();
         this.cachedEls.clockHoursLi[9].dispatchEvent(new Event('click'));
-        this.cachedEls.clockMinutesLi[9].dispatchEvent(new Event('click'));
+        this.cachedEls.clockMinutesLi[45].dispatchEvent(new Event('click'));
         this.cachedEls.clockMilitaryHoursLi[9].dispatchEvent(new Event('click'));
         this.cachedEls.meridiemSpans[0].dispatchEvent(new Event('click'));
     }
@@ -215,12 +215,12 @@ class TimePicker {
      * Rotate the hand element to selected time
      *
      * @param {integer} nodeIndex Index of active element
+     * @param {integer} increment Degree increment elements are on
      * @return {void}
      */
-    rotateHand(nodeIndex = 9) {
-        // rotation is done in increments of 30deg
+    rotateHand(nodeIndex = 9, increment = 30) {
         // nodeIndex 0 is 3 elements behind 0deg so subtract 90 from the sum
-        const rotateDeg = nodeIndex * 30 - 90;
+        const rotateDeg = nodeIndex * increment - 90;
         const styleVal = `rotate(${rotateDeg}deg)`;
 
         this.cachedEls.clockHand.style.transform = styleVal;
@@ -243,11 +243,13 @@ class TimePicker {
                 this.toggleHoursVisible(true, isMilitaryFormat);
                 this.toggleMinutesVisible();
                 this.rotateHand(this.getActiveIndex(hourEls));
+                this.cachedEls.clockHand.style.height = '95px';
             },
             () => {
                 this.toggleHoursVisible();
                 this.toggleMinutesVisible(true);
-                this.rotateHand(this.getActiveIndex(minuteEls));
+                this.rotateHand(this.getActiveIndex(minuteEls), 6);
+                this.cachedEls.clockHand.style.height = '115px';
             },
             () => {
                 this.timeSelected();
@@ -297,7 +299,7 @@ class TimePicker {
             }
         });
 
-        return activeIndex > 11 ? activeIndex - 12 : activeIndex;
+        return activeIndex;
     }
 
     /**
@@ -349,22 +351,43 @@ class TimePicker {
     }
 
     /**
-     * Time select event handler
+     * Hour select event handler
      *
      * @param {Event} event Event object passed from listener
      * @param {HTMLElement} containerEl Element containing time list elements
      * @param {HTMLCollection} listEls Collection of list elements
-     * @param {integer} displayIndex Index at which selected time should display [1: hours, 2: minutes]
      * @return {void}
      */
-    timeSelectEvent(event, containerEl, listEls, displayIndex) {
+    hourSelectEvent(event, containerEl, listEls) {
         event.stopPropagation();
 
         const newActive = event.target;
 
         this.setActiveEl(containerEl, newActive);
-        this.setDisplayTime(newActive.innerHTML, displayIndex);
+        this.setDisplayTime(newActive.innerHTML, 0);
         this.rotateHand(this.getActiveIndex(listEls));
+    }
+
+    /**
+     * Hour select event handler
+     *
+     * @param {Event} event Event object passed from listener
+     * @param {HTMLElement} containerEl Element containing time list elements
+     * @param {HTMLCollection} listEls Collection of list elements
+     * @return {void}
+     */
+    minuteSelectEvent(event, containerEl, listEls) {
+        event.stopPropagation();
+
+        const newActive = event.target;
+
+        this.setActiveEl(containerEl, newActive);
+
+        const activeIndex = this.getActiveIndex(listEls);
+        const displayTime = activeIndex > 44 ? activeIndex - 45 : activeIndex + 15;
+
+        this.setDisplayTime(displayTime, 1);
+        this.rotateHand(this.getActiveIndex(listEls), 6);
     }
 
     /**
