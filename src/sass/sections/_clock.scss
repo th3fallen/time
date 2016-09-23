@@ -15,11 +15,11 @@
         position: absolute;
         text-align: center;
         border-radius: 50%;
+        z-index: 555;
 
         &:hover:not(.mtp-clock--active) {
             background-color: $c-primary-light;
             cursor: pointer;
-            z-index: 555;
         }
     }
 }
@@ -36,13 +36,22 @@
 .mtp-clock__hours--inner {
     @include clockHours(150px, 30px);
     position: absolute;
-    font-size: 18px;
+    font-size: 16px;
 }
 .mtp-clock__minutes {
-    @include clockMinutes(235px, 25px);
-    font-size: 14px;
+    @include clockMinutes(225px, 30px);
+    font-size: 16px;
+
+    li:not(:nth-child(5n+1)) {
+        opacity: 0;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
 }
 .mtp-clock--active {
+    opacity: 1 !important;
     z-index: 444;
     background-color: $c-primary;
     color: $c-text;
