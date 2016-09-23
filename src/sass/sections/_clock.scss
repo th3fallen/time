@@ -25,18 +25,18 @@
 }
 .mtp-clock__hours, .mtp-clock__hours--inner {
     li {
-        top: 117.5px;
-        left: 117.5px;
+        top: 122.5px;
+        left: 122.5px;
     }
 }
 .mtp-clock__hours {
-    @include clockHours(225px, 40px);
+    @include clockHours(225px, 30px);
     font-size: 16px;
 }
 .mtp-clock__hours--inner {
-    @include clockHours(150px, 40px);
+    @include clockHours(150px, 30px);
     position: absolute;
-    font-size: 20px;
+    font-size: 18px;
 }
 .mtp-clock__minutes {
     @include clockMinutes(235px, 25px);

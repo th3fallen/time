@@ -136,6 +136,7 @@ class TimePicker {
         this.cachedEls.displayMeridiem.style.display = isMilitaryFormat ? 'none' : 'inline';
         this.cachedEls.meridiem.style.display = isMilitaryFormat ? 'none' : 'block';
         this.cachedEls.overlay.style.display = 'block';
+        this.cachedEls.clockHand.style.height = isMilitaryFormat ? '90px' : '105px';
     }
 
     /**
@@ -190,9 +191,9 @@ class TimePicker {
         this.currentStep = 0;
         this.toggleHoursVisible(true, this.isMilitaryFormat());
         this.toggleMinutesVisible();
-        this.cachedEls.clockHoursLi[9].dispatchEvent(new Event('click'));
-        this.cachedEls.clockMinutesLi[45].dispatchEvent(new Event('click'));
-        this.cachedEls.clockMilitaryHoursLi[9].dispatchEvent(new Event('click'));
+        this.cachedEls.clockHoursLi[0].dispatchEvent(new Event('click'));
+        this.cachedEls.clockMinutesLi[0].dispatchEvent(new Event('click'));
+        this.cachedEls.clockMilitaryHoursLi[0].dispatchEvent(new Event('click'));
         this.cachedEls.meridiemSpans[0].dispatchEvent(new Event('click'));
     }
 
@@ -219,8 +220,8 @@ class TimePicker {
      * @return {void}
      */
     rotateHand(nodeIndex = 9, increment = 30) {
-        // nodeIndex 0 is 3 elements behind 0deg so subtract 90 from the sum
-        const rotateDeg = nodeIndex * increment - 90;
+        // 0 index is 180 degress behind 0 deg
+        const rotateDeg = nodeIndex * increment - 180;
         const styleVal = `rotate(${rotateDeg}deg)`;
 
         this.cachedEls.clockHand.style.transform = styleVal;
@@ -243,7 +244,6 @@ class TimePicker {
                 this.toggleHoursVisible(true, isMilitaryFormat);
                 this.toggleMinutesVisible();
                 this.rotateHand(this.getActiveIndex(hourEls));
-                this.cachedEls.clockHand.style.height = '95px';
             },
             () => {
                 this.toggleHoursVisible();
@@ -293,10 +293,14 @@ class TimePicker {
     getActiveIndex(timeEls) {
         let activeIndex = 0;
 
-        [].forEach.call(timeEls, (timeEl, index) => {
+        [].some.call(timeEls, (timeEl, index) => {
             if (timeEl.classList.contains('mtp-clock--active')) {
                 activeIndex = index;
+
+                return true;
             }
+
+            return false;
         });
 
         return activeIndex;
@@ -362,10 +366,16 @@ class TimePicker {
         event.stopPropagation();
 
         const newActive = event.target;
+        const parentEl = newActive.parentElement;
+        const isInner = parentEl.classList.contains('mtp-clock__hours--inner');
 
+        this.cachedEls.clockHand.style.height = isInner ? '90px' : '105px';
         this.setActiveEl(containerEl, newActive);
+
+        const activeIndex = this.getActiveIndex(listEls);
+
         this.setDisplayTime(newActive.innerHTML, 0);
-        this.rotateHand(this.getActiveIndex(listEls));
+        this.rotateHand(activeIndex);
     }
 
     /**
@@ -384,7 +394,7 @@ class TimePicker {
         this.setActiveEl(containerEl, newActive);
 
         const activeIndex = this.getActiveIndex(listEls);
-        const displayTime = activeIndex > 44 ? activeIndex - 45 : activeIndex + 15;
+        const displayTime = activeIndex;
 
         this.setDisplayTime(displayTime, 1);
         this.rotateHand(activeIndex, 6);

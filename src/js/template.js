@@ -14,6 +14,9 @@ const template = `
                 <div class="mtp-clock__center"></div>
                 <div class="mtp-clock__hand"></div>
                 <ul class="mtp-clock__time mtp-clock__outer mtp-clock__hours" style="display:none">
+                    <li class="mtp-clock--active">12</li>
+                    <li>1</li>
+                    <li>2</li>
                     <li>3</li>
                     <li>4</li>
                     <li>5</li>
@@ -23,11 +26,23 @@ const template = `
                     <li>9</li>
                     <li>10</li>
                     <li>11</li>
-                    <li class="mtp-clock--active">12</li>
-                    <li>1</li>
-                    <li>2</li>
                 </ul>
                 <ul class="mtp-clock__time mtp-clock__outer mtp-clock__minutes" style="display:none">
+                    <li class="mtp-clock--active">0</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
+                    <li>5</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
+                    <li>10</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
+                    <li>&middot;</li>
                     <li>15</li>
                     <li>&middot;</li>
                     <li>&middot;</li>
@@ -73,38 +88,12 @@ const template = `
                     <li>&middot;</li>
                     <li>&middot;</li>
                     <li>&middot;</li>
-                    <li class="mtp-clock--active">0</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
-                    <li>5</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
-                    <li>10</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
-                    <li>&middot;</li>
                 </ul>
                 <ul class="mtp-clock__time mtp-clock__hours-military" style="display:none">
                     <div class="mtp-clock__hours--inner">
-                        <li>3</li>
-                        <li>4</li>
-                        <li>5</li>
-                        <li>6</li>
-                        <li>7</li>
-                        <li>8</li>
-                        <li>9</li>
-                        <li>10</li>
-                        <li>11</li>
                         <li class="mtp-clock--active">00</li>
-                        <li>1</li>
-                        <li>2</li>
-                    </div>
-                    <div class="mtp-clock__hours">
+                        <li>13</li>
+                        <li>14</li>
                         <li>15</li>
                         <li>16</li>
                         <li>17</li>
@@ -114,9 +103,20 @@ const template = `
                         <li>21</li>
                         <li>22</li>
                         <li>23</li>
+                    </div>
+                    <div class="mtp-clock__hours">
                         <li>12</li>
-                        <li>13</li>
-                        <li>14</li>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                        <li>6</li>
+                        <li>7</li>
+                        <li>8</li>
+                        <li>9</li>
+                        <li>10</li>
+                        <li>11</li>
                     </div>
                 </ul>
             </div><!-- END .mtp-clock -->

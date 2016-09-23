@@ -486,9 +486,9 @@ describe('TimePicker Unit Tests', function() {
             isMilitaryFormatStub = sinon.stub(picker, 'isMilitaryFormat');
             toggleHoursVisibleSpy = sinon.spy(picker, 'toggleHoursVisible');
             toggleMinutesVisibleSpy = sinon.spy(picker, 'toggleMinutesVisible');
-            hoursLiDispatchEventSpy = sinon.spy(cachedEls.clockHoursLi[9], 'dispatchEvent');
-            minutesLiDispatchEventSpy = sinon.spy(cachedEls.clockMinutesLi[45], 'dispatchEvent');
-            militaryHoursLiDispatchEventSpy = sinon.spy(cachedEls.clockMilitaryHoursLi[9], 'dispatchEvent');
+            hoursLiDispatchEventSpy = sinon.spy(cachedEls.clockHoursLi[0], 'dispatchEvent');
+            minutesLiDispatchEventSpy = sinon.spy(cachedEls.clockMinutesLi[0], 'dispatchEvent');
+            militaryHoursLiDispatchEventSpy = sinon.spy(cachedEls.clockMilitaryHoursLi[0], 'dispatchEvent');
             meridiemSpanDispatchEventSpy = sinon.spy(cachedEls.meridiemSpans[0], 'dispatchEvent');
         });
 
@@ -531,21 +531,21 @@ describe('TimePicker Unit Tests', function() {
             expect(toggleMinutesVisibleSpy.calledOnce).to.be.true;
         });
 
-        it('should call dispatchEvent with click event on cachedEls.clockHoursLi[9]', function() {
+        it('should call dispatchEvent with click event on cachedEls.clockHoursLi[0]', function() {
             picker.resetState();
 
             expect(hoursLiDispatchEventSpy.calledOnce).to.be.true;
             expect(hoursLiDispatchEventSpy.args[0][0].type).to.equal('click');
         });
 
-        it('should call dispatchEvent with click event on cachedEls.clockMinutesLi[9]', function() {
+        it('should call dispatchEvent with click event on cachedEls.clockMinutesLi[0]', function() {
             picker.resetState();
 
             expect(minutesLiDispatchEventSpy.calledOnce).to.be.true;
             expect(minutesLiDispatchEventSpy.args[0][0].type).to.equal('click');
         });
 
-        it('should call dispatchEvent with click event on cachedEls.clockMilitaryHoursLi[9]', function() {
+        it('should call dispatchEvent with click event on cachedEls.clockMilitaryHoursLi[0]', function() {
             picker.resetState();
 
             expect(militaryHoursLiDispatchEventSpy.calledOnce).to.be.true;
@@ -594,9 +594,9 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#rotateHand', function() {
-        it('should set cachedEls.clockHand.style.transform to rotate((nodeIndex * 30 - 90)deg)', function() {
+        it('should set cachedEls.clockHand.style.transform to rotate((nodeIndex * 30 - 180)deg)', function() {
             const nodeIndex = 5;
-            const rotateVal = 5 * 30 - 90;
+            const rotateVal = 5 * 30 - 180;
 
             picker.rotateHand(nodeIndex);
 
@@ -604,7 +604,7 @@ describe('TimePicker Unit Tests', function() {
         });
 
         it('should have a default value of 9 for nodeIndex', function() {
-            const rotateVal = 9 * 30 - 90;
+            const rotateVal = 9 * 30 - 180;
 
             picker.rotateHand();
 
@@ -933,11 +933,15 @@ describe('TimePicker Unit Tests', function() {
         getActiveIndexSpy, containerEl, listEls;
 
         beforeEach(function() {
+            const target = document.createElement('li');
+            const parent = document.createElement('div');
+            parent.appendChild(target);
+
             containerEl = picker.cachedEls.clockHours;
             listEls = picker.cachedEls.clockHoursLi;
             event = {
                 innerHTML: 'value',
-                target: document.createElement('li'),
+                target: target,
                 stopPropagation: function() {},
             };
 
