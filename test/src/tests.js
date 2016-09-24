@@ -14,6 +14,7 @@ describe('TimePicker Unit Tests', function() {
 
         picker = new TimePicker();
         picker.cachedEls = {};
+        picker.cachedEls.body = document.createElement('body');
         picker.cachedEls.overlay = divNode.cloneNode();
         picker.cachedEls.wrapper = divNode.cloneNode();
         picker.cachedEls.picker = divNode.cloneNode();
@@ -369,6 +370,12 @@ describe('TimePicker Unit Tests', function() {
 
             expect(picker.cachedEls.overlay.style.display).to.equal('block');
         });
+
+        it('should set cachedEls.body.style.overflow to hidden', function () {
+            picker.show();
+
+            expect(picker.cachedEls.body.style.overflow).to.equal('hidden');
+        });
     });
 
     describe('#showEvent', function() {
@@ -404,6 +411,12 @@ describe('TimePicker Unit Tests', function() {
             picker.hide();
 
             expect(picker.cachedEls.overlay.style.display).to.equal('none');
+        });
+
+        it('should set cachedEls.body.style.overflow to empty', function() {
+            picker.hide();
+
+            expect(picker.cachedEls.body.style.overflow).to.emtpy;
         });
 
         it('should call dispatchEvevnt with blur event on inputEl', function() {

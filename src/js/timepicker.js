@@ -16,7 +16,8 @@ class TimePicker {
         // `standard` or `military` display hours
         this.defaultOptions.timeFormat = 'standard';
         this.cachedEls = {};
-        this.cachedEls.overlay = document.getElementsByClassName('mtp-overlay')[0];
+        this.cachedEls.body = document.body;
+        this.cachedEls.overlay = this.cachedEls.body.getElementsByClassName('mtp-overlay')[0];
         this.cachedEls.wrapper = this.cachedEls.overlay.getElementsByClassName('mtp-wrapper')[0];
         this.cachedEls.picker = this.cachedEls.wrapper.getElementsByClassName('mtp-picker')[0];
         this.cachedEls.meridiem = this.cachedEls.wrapper.getElementsByClassName('mtp-meridiem')[0];
@@ -133,6 +134,7 @@ class TimePicker {
         this.setDisplayTime(isMilitaryFormat ? '00' : '12', 0);
         this.setDisplayTime('0', 1);
 
+        this.cachedEls.body.style.overflow = 'hidden';
         this.cachedEls.displayMeridiem.style.display = isMilitaryFormat ? 'none' : 'inline';
         this.cachedEls.meridiem.style.display = isMilitaryFormat ? 'none' : 'block';
         this.cachedEls.overlay.style.display = 'block';
@@ -157,6 +159,8 @@ class TimePicker {
      */
     hide() {
         this.cachedEls.overlay.style.display = 'none';
+        this.cachedEls.body.style.overflow = '';
+
         this.inputEl.dispatchEvent(new Event('blur'));
         this.resetState();
     }
