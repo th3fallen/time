@@ -432,5 +432,4 @@ class TimePicker {
     }
 }
 
-window.TimePicker = new TimePicker();
 export default TimePicker;

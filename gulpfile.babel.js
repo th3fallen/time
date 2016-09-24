@@ -10,7 +10,7 @@ const sassOpts = {
 };
 
 const jsOpts = {
-    files: ['./src/js/timepicker.js'],
+    files: ['./src/js/timepicker.js', './src/js/index.js'],
     outPath: './build/js',
     lintPath: './src/js/**/*.js',
 };
