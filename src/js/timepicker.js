@@ -1,7 +1,42 @@
 import template from './template';
 import assign from './assign';
 
+/**
+ * @class TimePicker
+ *
+ * @prop {string} template - TimePicker template
+ * @prop {number} currentStep - The step the TimePicker is on [0 = hours, 1 = minutes, 2 = finish]
+ * @prop {object} defaultOptions - Default config options
+ * @prop {string} defaultOptions.timeFormat - 12 or 24 hour format ['standard', 'military']
+ * @prop {bool} defaultOptions.autoNext - Auto-next on time element select
+ * @prop {object} cachedEls - Cached elements in template
+ * @prop {HTMLElement} cachedEls.body - document.body
+ * @prop {HTMLElement} cachedEls.overlay - Overlay element ('.mtp-overlay')[0]
+ * @prop {HTMLElement} cachedEls.wrapper - Wrapper element ('.mtp-wrapper')[0]
+ * @prop {HTMLElement} cachedEls.picker - Selection elements wrapper ('.mtp-picker')[0]
+ * @prop {HTMLElement} cachedEls.meridiem - Meridiem selection elements wrapper ('.mtp-meridiem')[0]
+ * @prop {HTMLCollection} cachedEls.meridiemSpans - Meridiem selection elements meridiem('span')
+ * @prop {HTMLElement} cachedEls.displayTime - Selected time display element ('.mtp-display__time')[0]
+ * @prop {HTMLElement} cachedEls.displayMerdiem - Selected meridiem display element ('.mtp-display__meridiem')[0]
+ * @prop {HTMLElement} cachedEls.buttonCancel - Cancel button element ('.mtp-actions__cancel')[0]
+ * @prop {HTMLElement} cachedEls.buttonBack - Back button element ('.mtp-actions__back')[0]
+ * @prop {HTMLElement} cachedEls.buttonOk - Ok button element ('.mtp-actions__ok')[0]
+ * @prop {HTMLElement} cachedEls.clockHours - Hour elements display wrapper ('.mtp-clock__hours')[0]
+ * @prop {HTMLElement} cachedEls.clockMinutes - Minute elements display wrapper ('.mtp-clock__minutes')[0]
+ * @prop {HTMLElement} cachedEls.clockMilitaryHours - Military hour elements display wrapper ('.mtp_clock__hours--military')[0]
+ * @prop {HTMLElement} cachedEls.clockHand - Clock hand display ('.mtp-clock__hand')[0]
+ * @prop {HTMLCollection} cachedEls.clockHoursLi - Hour list elements clockHours('li')
+ * @prop {HTMLCollection} cachedEls.clockMinutesLi - Minute list elements clockMinutes('li')
+ * @prop {HTMLCollection} cachedEls.clockMilitaryHoursLi - Militar Hour li elements clockMilitaryHours('li')
+ */
 class TimePicker {
+    template = template;
+    currentStep = 0;
+    defaultOptions = {
+        timeFormat: 'standard',
+        autoNext: false,
+    };
+    cachedEls = {};
 
     /**
      * Initialize new TimePicker instance
@@ -9,13 +44,8 @@ class TimePicker {
      * @return {TimePicker} New TimePicker instance
      */
     constructor() {
-        this.template = template;
         this.setupTemplate();
-        this.currentStep = 0;
-        this.defaultOptions = {};
-        // `standard` or `military` display hours
-        this.defaultOptions.timeFormat = 'standard';
-        this.cachedEls = {};
+
         this.cachedEls.body = document.body;
         this.cachedEls.overlay = this.cachedEls.body.getElementsByClassName('mtp-overlay')[0];
         this.cachedEls.wrapper = this.cachedEls.overlay.getElementsByClassName('mtp-wrapper')[0];
