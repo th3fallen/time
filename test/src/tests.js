@@ -1,5 +1,6 @@
 /* eslint-disable */
 import TimePicker from '../../src/js/timepicker';
+import Events from '../../src/js/events';
 import assign from '../../src/js/assign';
 
 describe('TimePicker Unit Tests', function() {  
@@ -1062,6 +1063,84 @@ describe('TimePicker Unit Tests', function() {
             expect(getActiveIndexSpy.returnValues[0]).to.equal(0);
             expect(rotateHandSpy.calledOnce).to.be.true;
             expect(rotateHandSpy.calledWith(0)).to.be.true;
+        });
+    });
+});
+
+describe('Events unit tests', function () {
+    let events;
+
+    beforeEach(function () {
+        events = new Events();
+    });
+
+    afterEach(function () {
+        events = null;
+    });
+
+    describe('#on', function () {
+        it('should create a new event index if not already set', function () {
+            const eventName = 'test';
+
+            expect(events.events[eventName]).to.be.undefined;
+
+            events.on(eventName, () => false);
+
+            expect(events.events[eventName].length).to.equal(1);
+        });
+
+        it('should add to the existing event index if already set', function () {
+            const eventName = 'test';
+
+            expect(events.events[eventName]).to.be.undefined;
+
+            events.on(eventName, () => false);
+
+            expect(events.events[eventName].length).to.equal(1);
+
+            events.on(eventName, () => false);
+
+            expect(events.events[eventName].length).to.equal(2);
+        });
+    });
+
+    describe('#off', function () {
+        it('should remove handlers from events index', function () {
+            const eventName = 'test';
+
+            expect(events.events[eventName]).to.be.undefined;
+
+            events.on(eventName, () => false);
+            events.on(eventName, () => false);
+            expect(events.events[eventName].length).to.equal(2);
+
+            events.off(eventName);
+
+            expect(events.events[eventName].length).to.equal(0);
+        });
+    });
+
+    describe('#trigger', function () {
+        it('should trigger all the assigned callbacks for the event specified', function () {
+            const eventName = 'test';
+            const eventHandler = sinon.spy();
+
+            events.on(eventName, eventHandler);
+            events.trigger(eventName);
+
+            expect(eventHandler.called).to.be.true;
+        });
+
+        it('should call event handler with the passed parameters', function () {
+            const eventName = 'test';
+            const eventHandler = sinon.spy();
+            const eventParams = 'params';
+
+            events.on(eventName, eventHandler);
+            events.trigger(eventName, eventParams);
+
+            expect(eventHandler.called).to.be.true;
+            expect(eventHandler.calledWith(eventParams)).to.be.true;
         });
     });
 });
