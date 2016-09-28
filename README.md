@@ -1,10 +1,10 @@
 # material-timepicker 
 
-[![Build Status](https://strider.nickc.io/hownowbrowncow/material-timepicker/badge?branch=master)](https://strider.nickc.io/hownowbrowncow/material-timepicker)
+[![Build Status](https://strider.nickc.io/hownowbrowncow/material-timepicker/badge?branch=master)](https://strider.nickc.io/hownowbrowncow/material-timepicker) [![Dependency Status](https://david-dm.org/hownowbrowncow/material-timepicker.svg)](https://david-dm.org/hownowbrowncow/material-timepicker)
 
 ## Install
 
-Available on NPM only currently  
+Available on NPM only   
 
 ```
 npm install material-timepicker
