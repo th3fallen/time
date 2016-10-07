@@ -32,7 +32,7 @@ gulp.task('clean:ghpages', () => del(['./ghpages/scripts/*', './ghpages/styleshe
 gulp.task('clean:js', () => del(`${jsOpts.outPath}/*`));
 gulp.task('clean:sass', () => del(`${sassOpts.outPath}/*`));
 gulp.task('clean:test', () => del(`${testOpts.outPath}/*`));
-gulp.task('clean', ['clean:js', 'clean:sass', 'clean:test', 'clean:ghpages']);
+gulp.task('clean', ['clean:js', 'clean:sass', 'clean:test']);
 
 gulp.task('dist:app', ['compile:sass', 'compile:js'], () => {
     gulp.src('./build/js/timepicker.js').pipe(gulp.dest('./dist'));

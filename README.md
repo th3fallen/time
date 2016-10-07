@@ -1,4 +1,4 @@
-# material-timepicker 
+# material-timepicker
 
 [![Build Status](https://strider.nickc.io/hownowbrowncow/material-timepicker/badge?branch=master)](https://strider.nickc.io/hownowbrowncow/material-timepicker) [![Dependency Status](https://david-dm.org/hownowbrowncow/material-timepicker.svg)](https://david-dm.org/hownowbrowncow/material-timepicker)
 
@@ -9,6 +9,15 @@ Available on NPM only
 ```
 npm install material-timepicker
 ```
+
+## Build
+
+Requires the use of the [gulp task runner](https://github.com/gulpjs/gulp). To install globally, use `npm install -g gulp`
+
+* **Build** - `gulp`
+* **Test** - `gulp test:js`
+* **Run Locally** - `npm start`
+
 
 ## About
 
