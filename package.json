@@ -5,6 +5,7 @@
   "main": "./dist/js/timepicker.js",
   "scripts": {
     "test": "gulp test:js",
+    "build": "cp ./build/css/main.css ./dist/css/timepicker.css && babel ./src --out-dir ./dist",
     "start": "http-server -p 9001"
   },
   "repository": {
