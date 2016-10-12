@@ -271,7 +271,7 @@ describe('TimePicker Unit Tests', function() {
 
     describe('#show', function() {
         let blurSpy, isMilitaryFormatStub, toggleHoursVisibleSpy, toggleMinutesVisibleSpy,
-        setDisplayTimeSpy;
+        setDisplayTimeSpy, triggerSpy;
 
         beforeEach(function() {
             picker.inputEl = document.createElement('input');
@@ -280,6 +280,7 @@ describe('TimePicker Unit Tests', function() {
             toggleHoursVisibleSpy = sinon.spy(picker, 'toggleHoursVisible');
             toggleMinutesVisibleSpy = sinon.spy(picker, 'toggleMinutesVisible');
             setDisplayTimeSpy = sinon.spy(picker, 'setDisplayTime');
+            triggerSpy = sinon.spy(picker, 'trigger');
         });
 
         afterEach(function() {
@@ -288,6 +289,7 @@ describe('TimePicker Unit Tests', function() {
             toggleHoursVisibleSpy.restore();
             toggleMinutesVisibleSpy.restore();
             setDisplayTimeSpy.restore();
+            triggerSpy.restore();
         });
 
         it('should call blur on inputEl', function() {
@@ -372,10 +374,17 @@ describe('TimePicker Unit Tests', function() {
             expect(picker.cachedEls.overlay.style.display).to.equal('block');
         });
 
-        it('should set cachedEls.body.style.overflow to hidden', function () {
+        it('should set cachedEls.body.style.overflow to hidden', function() {
             picker.show();
 
             expect(picker.cachedEls.body.style.overflow).to.equal('hidden');
+        });
+
+        it('should trigger `show` event', function() {
+            picker.show();
+
+            expect(triggerSpy.calledOnce).to.be.true;
+            expect(triggerSpy.calledWith('show')).to.be.true;
         });
     });
 
@@ -403,9 +412,16 @@ describe('TimePicker Unit Tests', function() {
     });
 
     describe('#hide', function() {
+        let triggerSpy;
+
         beforeEach(function() {
             picker.inputEl = document.createElement('input');
             picker.inputEl.mtpOptions = picker.defaultOptions;
+            triggerSpy = sinon.spy(picker, 'trigger');
+        });
+
+        afterEach(function() {
+            triggerSpy.restore();
         });
 
         it('should set cachedEls.overlay.style.display to none', function() {
@@ -439,6 +455,13 @@ describe('TimePicker Unit Tests', function() {
             expect(resetStateSpy.calledOnce).to.be.true;
 
             resetStateSpy.restore();
+        });
+
+        it('should trigger `hide` event', function() {
+            picker.hide();
+
+            expect(triggerSpy.calledOnce).to.be.true;
+            expect(triggerSpy.calledWith('hide')).to.be.true;
         });
     });
 
@@ -870,7 +893,7 @@ describe('TimePicker Unit Tests', function() {
             removeSpy.restore();
         })
 
-        it('should add class .mtp-clock--active to activeEl parameter', function () {
+        it('should add class .mtp-clock--active to activeEl parameter', function() {
             const activeEl = picker.cachedEls.clockHoursLi[1];
             const addSpy = sinon.spy(activeEl.classList, 'add');
 
@@ -944,7 +967,7 @@ describe('TimePicker Unit Tests', function() {
 
     describe('#hourSelectEvent', function() {
         let event, stopPropagationSpy, setActiveElSpy, setDisplayTimeSpy, rotateHandSpy,
-        getActiveIndexSpy, containerEl, listEls;
+        getActiveIndexSpy, containerEl, listEls, triggerSpy;
 
         beforeEach(function() {
             const target = document.createElement('li');
@@ -965,6 +988,7 @@ describe('TimePicker Unit Tests', function() {
             setDisplayTimeSpy = sinon.spy(picker, 'setDisplayTime');
             rotateHandSpy = sinon.spy(picker, 'rotateHand');
             getActiveIndexSpy = sinon.spy(picker, 'getActiveIndex');
+            triggerSpy = sinon.spy(picker, 'trigger');
         });
 
         afterEach(function() {
@@ -973,6 +997,7 @@ describe('TimePicker Unit Tests', function() {
             setDisplayTimeSpy.restore();
             rotateHandSpy.restore();
             getActiveIndexSpy.restore();
+            triggerSpy.restore();
         });
 
         it('should call stopPropagation on passed event parameter', function() {
@@ -1004,11 +1029,18 @@ describe('TimePicker Unit Tests', function() {
             expect(rotateHandSpy.calledOnce).to.be.true;
             expect(rotateHandSpy.calledWith(0)).to.be.true;
         });
+
+        it('should trigger `hourSelected` event', function() {
+            picker.hourSelectEvent(event, containerEl, listEls);
+
+            expect(triggerSpy.calledOnce).to.be.true;
+            expect(triggerSpy.calledWith('hourSelected')).to.be.true;
+        });
     });
 
     describe('#minuteSelectEvent', function() {
         let event, stopPropagationSpy, setActiveElSpy, setDisplayTimeSpy, rotateHandSpy,
-        getActiveIndexSpy, containerEl, listEls;
+        getActiveIndexSpy, containerEl, listEls, triggerSpy;
 
         beforeEach(function() {
             containerEl = picker.cachedEls.clockHours;
@@ -1025,6 +1057,7 @@ describe('TimePicker Unit Tests', function() {
             setDisplayTimeSpy = sinon.spy(picker, 'setDisplayTime');
             rotateHandSpy = sinon.spy(picker, 'rotateHand');
             getActiveIndexSpy = sinon.spy(picker, 'getActiveIndex');
+            triggerSpy = sinon.spy(picker, 'trigger');
         });
 
         afterEach(function() {
@@ -1033,6 +1066,7 @@ describe('TimePicker Unit Tests', function() {
             setDisplayTimeSpy.restore();
             rotateHandSpy.restore();
             getActiveIndexSpy.restore();
+            triggerSpy.restore();
         });
 
         it('should call stopPropagation on passed event parameter', function() {
@@ -1064,22 +1098,29 @@ describe('TimePicker Unit Tests', function() {
             expect(rotateHandSpy.calledOnce).to.be.true;
             expect(rotateHandSpy.calledWith(0)).to.be.true;
         });
+
+        it('should trigger `minuteSelected` event', function() {
+            picker.minuteSelectEvent(event, containerEl, listEls);
+
+            expect(triggerSpy.calledOnce).to.be.true;
+            expect(triggerSpy.calledWith('minuteSelected')).to.be.true;
+        });
     });
 });
 
-describe('Events unit tests', function () {
+describe('Events unit tests', function() {
     let events;
 
-    beforeEach(function () {
+    beforeEach(function() {
         events = new Events();
     });
 
-    afterEach(function () {
+    afterEach(function() {
         events = null;
     });
 
-    describe('#on', function () {
-        it('should create a new event index if not already set', function () {
+    describe('#on', function() {
+        it('should create a new event index if not already set', function() {
             const eventName = 'test';
 
             expect(events.events[eventName]).to.be.undefined;
@@ -1089,7 +1130,7 @@ describe('Events unit tests', function () {
             expect(events.events[eventName].length).to.equal(1);
         });
 
-        it('should add to the existing event index if already set', function () {
+        it('should add to the existing event index if already set', function() {
             const eventName = 'test';
 
             expect(events.events[eventName]).to.be.undefined;
@@ -1104,8 +1145,8 @@ describe('Events unit tests', function () {
         });
     });
 
-    describe('#off', function () {
-        it('should remove handlers from events index', function () {
+    describe('#off', function() {
+        it('should remove handlers from events index', function() {
             const eventName = 'test';
 
             expect(events.events[eventName]).to.be.undefined;
@@ -1120,8 +1161,8 @@ describe('Events unit tests', function () {
         });
     });
 
-    describe('#trigger', function () {
-        it('should trigger all the assigned callbacks for the event specified', function () {
+    describe('#trigger', function() {
+        it('should trigger all the assigned callbacks for the event specified', function() {
             const eventName = 'test';
             const eventHandler = sinon.spy();
 
@@ -1131,7 +1172,7 @@ describe('Events unit tests', function () {
             expect(eventHandler.called).to.be.true;
         });
 
-        it('should call event handler with the passed parameters', function () {
+        it('should call event handler with the passed parameters', function() {
             const eventName = 'test';
             const eventHandler = sinon.spy();
             const eventParams = 'params';
