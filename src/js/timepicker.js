@@ -1,5 +1,6 @@
 import template from './template';
 import assign from './assign';
+import Events from './events';
 
 /**
  * @class TimePicker
@@ -29,7 +30,7 @@ import assign from './assign';
  * @prop {HTMLCollection} cachedEls.clockMinutesLi - Minute list elements clockMinutes('li')
  * @prop {HTMLCollection} cachedEls.clockMilitaryHoursLi - Militar Hour li elements clockMilitaryHours('li')
  */
-class TimePicker {
+class TimePicker extends Events {
     template = template;
     currentStep = 0;
     defaultOptions = {
@@ -44,6 +45,8 @@ class TimePicker {
      * @return {TimePicker} New TimePicker instance
      */
     constructor() {
+        super();
+
         this.setupTemplate();
 
         this.cachedEls.body = document.body;
@@ -169,6 +172,8 @@ class TimePicker {
         this.cachedEls.meridiem.style.display = isMilitaryFormat ? 'none' : 'block';
         this.cachedEls.overlay.style.display = 'block';
         this.cachedEls.clockHand.style.height = isMilitaryFormat ? '90px' : '105px';
+
+        this.trigger('show');
     }
 
     /**
@@ -193,6 +198,7 @@ class TimePicker {
 
         this.inputEl.dispatchEvent(new Event('blur'));
         this.resetState();
+        this.trigger('hide');
     }
 
     /**
@@ -410,6 +416,7 @@ class TimePicker {
 
         this.setDisplayTime(newActive.innerHTML, 0);
         this.rotateHand(activeIndex);
+        this.trigger('hourSelected');
     }
 
     /**
@@ -432,6 +439,7 @@ class TimePicker {
 
         this.setDisplayTime(displayTime, 1);
         this.rotateHand(activeIndex, 6);
+        this.trigger('minuteSelected');
     }
 
     /**
