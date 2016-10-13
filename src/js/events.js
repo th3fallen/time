@@ -1,3 +1,6 @@
+// @flow
+
+type EventsType = {[key: string]: Array<() => void>};
 
 /**
  * @class Events
@@ -5,7 +8,7 @@
  * @prop {object} events - Hash table of events and their assigned handler callbacks
  */
 export default class Events {
-    events = {};
+    events: EventsType = {};
 
     /**
      * Set handler on event
@@ -14,7 +17,7 @@ export default class Events {
      * @param {func} handler - Handler function callback
      * @return {void}
      */
-    on(event, handler) {
+    on(event: string, handler: () => void): void {
         if (!this.events[event]) {
             this.events[event] = [];
         }
@@ -28,7 +31,7 @@ export default class Events {
      * @param {string} event - Event name to remove handler from
      * @return {void}
      */
-    off(event) {
+    off(event: string): void {
         if (this.events[event]) {
             this.events[event] = [];
         }
@@ -41,7 +44,7 @@ export default class Events {
      * @param {object} params - Parameters to pass to event handler
      * @return {void}
      */
-    trigger(event, params) {
+    trigger(event: string, params: {}): void {
         if (this.events[event] && this.events[event].length) {
             this.events[event].forEach(handler => handler(params));
         }
