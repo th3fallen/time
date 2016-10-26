@@ -22,7 +22,7 @@ Requires the use of the [gulp task runner](https://github.com/gulpjs/gulp) and b
 
 ## About
 
-Currently the Material Design Lite project doesn't have any picker features implemented. There are a few other OS material picker libraries but they are either not actively maintained,  or require heavy dependencies.
+Currently, the Material Design Lite project doesn't have any picker features implemented. There are a few other OS material picker libraries but they are either not actively maintained,  or require heavy dependencies.
 
 In need of a timepicker for a current project I made this library. Built with plain JavaScript and no dependencies. Written in ES6 and SASS.
 
